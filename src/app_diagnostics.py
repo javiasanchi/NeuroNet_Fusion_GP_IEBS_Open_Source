@@ -270,6 +270,28 @@ with tab_app:
         st.error("❌ Error: No se pudo cargar el modelo de diagnóstico.")
 
 with tab_doc:
+    # Botón de retorno a la app usando JS
+    components.html("""
+    <button onclick="
+        var tabs = window.parent.document.querySelectorAll('[data-baseweb=tab]');
+        if (tabs.length > 0) { tabs[0].click(); }
+    " style="
+        background: linear-gradient(135deg, #1a3a6b, #1e4d8c);
+        color: #58A6FF;
+        border: 1px solid #30363D;
+        border-radius: 8px;
+        padding: 7px 18px;
+        font-size: 0.82rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: Inter, sans-serif;
+        letter-spacing: 0.02em;
+    " onmouseover="this.style.opacity='0.82'"
+       onmouseout="this.style.opacity='1'">
+        ← Volver a la Aplicación
+    </button>
+    """, height=45)
+
     st.markdown("## 📚 Documentación Técnica — NeuroNet-Fusion")
     st.markdown("`Versión 2.0 | IEBS Digital School | Proyecto Fin de Máster | 2025`")
     st.markdown("---")
