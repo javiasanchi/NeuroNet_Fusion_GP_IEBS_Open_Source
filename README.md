@@ -50,6 +50,8 @@
 
 El sistema opera exclusivamente sobre **datos tabulares de biomarcadores**, eliminando la necesidad de procesar imágenes MRI brutas en producción, lo que lo hace **deployable en cualquier entorno hospitalario** sin hardware especializado.
 
+![Resumen Resultados](reports/figures/tabla_resumen_ejecutivo.jpg)
+
 ---
 
 ## 📊 Resultados Clave
@@ -70,6 +72,8 @@ El sistema opera exclusivamente sobre **datos tabulares de biomarcadores**, elim
 </div>
 
 > ⭐ **El resultado más relevante:** 100% de sensibilidad en Alzheimer moderado — **cero pacientes AD clasificados como sanos**.
+
+![Objetivos Proyecto](reports/figures/tabla_3_2_objetivos.jpg)
 
 ---
 
@@ -214,6 +218,8 @@ TAU Total (LCR)                  █████████░░░░░░�
 
 El análisis SHAP confirma la **coherencia clínica del modelo**: las variables con mayor peso son exactamente las que los neurólogos utilizan para el diagnóstico, validando el sistema según el marco **ATN-NIA-AA 2018**.
 
+![Análisis SHAP](reports/figures/shap_beeswarm_AD.png)
+
 ---
 
 ## �️ Aplicación Clínica (CDSS)
@@ -228,6 +234,8 @@ El análisis SHAP confirma la **coherencia clínica del modelo**: las variables 
 - 🧬 **Narrativa SHAP** automática de factores determinantes
 - 📄 **Informe ATN** descargable (NIA-AA 2018)
 - 🤖 **Agente Clínico** (GPT-4o-mini) para análisis NLP avanzado
+
+![Informe Ejemplo](reports/figures/informe_ejemplo_final.jpg)
 
 ---
 
