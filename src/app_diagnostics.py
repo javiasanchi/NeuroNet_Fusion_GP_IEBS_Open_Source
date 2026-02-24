@@ -99,7 +99,14 @@ tab_app, tab_doc = st.tabs(["🧠 NeuroNet-Fusion AI", "📚 Documentación Téc
 
 with tab_app:
     st.markdown("<h1 style='text-align: center;'>NeuroNet-Fusion</h1>", unsafe_allow_html=True)
-    st.markdown("<p style='text-align: center; color: #a0aec0; margin-top: -10px;'>Diagnóstico Multimodal de Precisión para Alzheimer</p>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #a0aec0; margin-top: -10px;'>Diagnóstico Multimodal de Precisión para Enfermedad de Alzheimer</p>", unsafe_allow_html=True)
+    st.markdown("""
+    <div style='text-align:center; margin-bottom: 1rem;'>
+        <span style='background:#1e3a5f; color:#58A6FF; padding:6px 18px; border-radius:20px; font-size:0.82rem; border:1px solid #30363D;'>
+            ℹ️ Consulta la pestaña <b>📚 Documentación Técnica</b> para ver el glosario completo, métodos y guía de uso
+        </span>
+    </div>
+    """, unsafe_allow_html=True)
 
     if data_pkg:
         model, features = data_pkg['model'], data_pkg['features']
@@ -214,24 +221,302 @@ with tab_app:
         st.error("Error: No se pudo cargar el modelo de diagnóstico.")
 
 with tab_doc:
-    st.markdown("## 📚 Documentación Técnica")
-    
-    with st.expander("🛠️ Guía del Agente de IA", expanded=True):
+    st.markdown("## 📚 Documentación Técnica — NeuroNet-Fusion")
+    st.markdown("`Versión 2.0 | IEBS Digital School | Proyecto Fin de Máster | 2025`")
+    st.markdown("---")
+
+    # ── SECCIÓN 1: Qué es NeuroNet-Fusion ──────────────────────────────────
+    with st.expander("🧠 ¿Qué es NeuroNet-Fusion?", expanded=True):
         st.markdown("""
-        NeuroNet-Fusion utiliza IA generativa para razonamiento clínico. 
-        - **OpenAI:** GPT-4o recomendado para precisión diagnóstica.
-        - **Gemini:** Ideal para análisis de largos historiales médicos.
-        - **Seguridad:** Tus API Keys no se guardan en el servidor, solo en la memoria de la sesión actual.
+**NeuroNet-Fusion** es un sistema de diagnóstico asistido por inteligencia artificial diseñado para apoyar a
+profesionales médicos en la detección y estadificación de la **Enfermedad de Alzheimer (EA)**.
+
+El sistema fusiona tres modalidades de datos clínicos — **cognitivos, estructurales (MRI) y moleculares (LCR)** —
+para emitir un dictamen probabilístico multiclase:
+
+| Clase | Descripción |
+|:---|:---|
+| **CN** — Cognitivamente Normal | Sin evidencia clínica ni biológica de patología |
+| **MCI** — Deterioro Cognitivo Leve | Declive detectable, funcionalidad diaria preservada |
+| **AD** — Alzheimer's Disease | Demencia tipo Alzheimer establecida |
+
+**Arquitectura del Motor de Diagnóstico:**
+El modelo utiliza **XGBoost (Extreme Gradient Boosting)**, entrenado sobre un dataset multicohorte obtenido de las iniciativas
+internacionales **ADNI (Alzheimer's Disease Neuroimaging Initiative)** y **OASIS-3 (Open Access Series of Imaging Studies)**.
+Combina 14 variables de entrada para producir probabilidades de pertenencia a las 3 clases.
+
+**Base Normativa:** El marco de clasificación sigue las guías **NIA-AA 2018** (National Institute on Aging & Alzheimer's Association),
+que establecen el sistema ATN como estándar de diagnóstico biológico.
         """)
 
-    with st.expander("🧪 Glosario Médicos de Biomarcadores"):
+    # ── SECCIÓN 2: Biomarcadores Cognitivos ────────────────────────────────
+    with st.expander("🧩 Biomarcadores Cognitivos (MMSE · CDR · FAQ)"):
         st.markdown("""
-        | Biomarcador | Rango Normal | Significado Clínico |
-        | :--- | :--- | :--- |
-        | **MMSE** | 24 - 30 | Cognición Global preservada. |
-        | **Aβ42** | > 900 pg/mL | Ausencia de placas de amiloide. |
-        | **Hipocampo** | > 0.005 | Integridad estructural de la memoria. |
-        | **CDR** | 0 | Ausencia de demencia clínica. |
+### 1. MMSE — Mini-Mental State Examination
+El **MMSE** es la escala de cribado cognitivo más utilizada en clínica. Evalúa:
+- Orientación temporo-espacial
+- Registro y memoria a corto plazo
+- Atención y cálculo (p.ej., deletrear al revés)
+- Lenguaje: denominación, repetición, comprensión
+- Praxia constructiva: copia de una figura geométrica
+
+| Puntuación | Interpretación Clínica |
+|:---|:---|
+| **27 – 30** | Rango normal. Sin deterioro apreciable. |
+| **21 – 26** | Deterioro Cognitivo Leve (MCI) posible. |
+| **11 – 20** | Demencia moderada. Dependencia funcional creciente. |
+| **0 – 10** | Demencia grave. Alta dependencia en actividades de la vida diaria. |
+
+⚠️ *El MMSE puede infraestimar el deterioro en pacientes con alta reserva cognitiva (educación elevada).*
+
+---
+
+### 2. CDR — Clinical Dementia Rating
+El **CDR** es una herramienta semicuantitativa que evalúa la gravedad global de la demencia en 6 dominios:
+memoria, orientación, juicio, vida social, hogar y cuidado personal.
+
+| CDR | Estadio |
+|:---|:---|
+| **0** | Normal — Sin demencia. |
+| **0.5** | Demencia muy leve / MCI — Dudoso. |
+| **1** | Demencia leve. |
+| **2** | Demencia moderada. |
+| **3** | Demencia grave. |
+
+*Un CDR de 0.5 no implica diagnóstico definitivo, pero es el umbral clínico para iniciar estudios adicionales.*
+
+---
+
+### 3. FAQ — Functional Activities Questionnaire
+El **FAQ** cuantifica la capacidad del paciente para realizar **10 actividades instrumentales** de la vida diaria
+(gestión de finanzas, cocinar, orientarse fuera de casa, etc.), puntuadas de 0 a 3 cada una.
+
+| Puntuación Total | Interpretación |
+|:---|:---|
+| **0 – 5** | Funcionamiento independiente. |
+| **6 – 9** | Deterioro funcional leve. |
+| **≥ 9** | Dependencia funcional significativa. Criterio diagnóstico de demencia. |
         """)
-        
-    st.info("Esta herramienta es para uso académico y de apoyo a la investigación clínica.")
+
+    # ── SECCIÓN 3: Biomarcadores Estructurales MRI ─────────────────────────
+    with st.expander("🖼️ Biomarcadores Estructurales (MRI — Volúmenes Normalizados)"):
+        st.markdown("""
+Los volúmenes cerebrales se extraen mediante segmentación automática con **FreeSurfer** y se normalizan
+dividiéndolos por el **Volumen Intracraneal Total (TIV)** del paciente para eliminar el efecto del tamaño de la cabeza.
+Se expresan como fracción del TIV (valores típicamente entre 0.001 y 0.100).
+
+---
+
+### 1. Hipocampo
+El hipocampo es la estructura cerebral crítica para la **formación de nuevos recuerdos**. Es la primera región
+afectada por la patología Tau en la EA, y su atrofia es el sello imaging de la enfermedad.
+
+| Volumen Norm. | Interpretación |
+|:---|:---|
+| **> 0.005** | Normal. Sin atrofia significativa. |
+| **0.003 – 0.005** | Atrofia leve-moderada. Sospecha de MCI o EA precoz. |
+| **< 0.003** | Atrofia severa. Altamente sugestivo de EA establecida. |
+
+---
+
+### 2. Corteza Entorrinal
+Es la **puerta de entrada** al hipocampo y una de las primeras regiones lesionadas por los ovillos neurofibrilares
+(patología Tau). Su adelgazamiento precede años a los síntomas cognitivos.
+
+| Volumen Norm. | Interpretación |
+|:---|:---|
+| **> 0.004** | Grosor cortical preservado. |
+| **0.002 – 0.004** | Reducción moderada. Marcador de neurodegeneración temprana. |
+| **< 0.002** | Pérdida severa. Correlaciona con estadios avanzados de Braak. |
+
+---
+
+### 3. Ventrículos Laterales
+Los ventrículos son cavidades llenas de líquido cefalorraquídeo. Su **expansión** es una consecuencia directa de
+la pérdida de tejido cerebral (neurodegeneración global), sirviendo como marcador indirecto de atrofia.
+
+| Volumen Norm. | Interpretación |
+|:---|:---|
+| **< 0.025** | Normal para la edad. |
+| **0.025 – 0.060** | Agrandamiento leve-moderado. Puede ser normal en mayores de 70 años. |
+| **> 0.060** | Agrandamiento marcado. Indica pérdida global significativa de tejido. |
+        """)
+
+    # ── SECCIÓN 4: Sistema ATN (LCR) ────────────────────────────────────────
+    with st.expander("🧪 Biomarcadores Moleculares — Sistema ATN (LCR)"):
+        st.markdown("""
+El **Sistema ATN**, propuesto por Jack et al. (NIA-AA, 2018), clasifica biológicamente la EA según tres
+dimensiones de biomarcadores obtenibles mediante punción lumbar o PET:
+
+| Dimensión | Biomarcador | Significado |
+|:---|:---|:---|
+| **A** — Amiloide | Aβ42 en LCR o PET-Amiloide | Presencia de placas de β-amiloide |
+| **T** — Tau | pTau (Tau fosforilado) en LCR | Formación de ovillos neurofibrilares |
+| **N** — Neurodegeneración | Tau Total o PET-FDG o MRI | Daño y muerte neuronal activa |
+
+---
+
+### 1. Aβ42 — Beta-Amiloide 42 (Marcador A)
+La **formación de placas amiloides** en el parénquima cerebral secuestra el Aβ42 del LCR, por lo que
+**valores BAJOS** en líquido cefalorraquídeo indican presencia de amiloide cerebral (**A+**).
+
+| Aβ42 (pg/mL) | Estado ATN | Interpretación |
+|:---|:---|:---|
+| **> 1000** | A— | Sin evidencia de patología amiloide. |
+| **900 – 1000** | A? | Zona gris. Requiere confirmación con PET. |
+| **< 900** | **A+** | Depósito amiloide significativo. Alta especificidad para EA. |
+
+---
+
+### 2. Tau Total (Marcador N)
+El **Tau total** en LCR es un marcador de **daño neuronal activo e inespecífico**. Aumenta en cualquier
+condición que provoque muerte neuronal (EA, trauma, ACV).
+
+| Tau Total (pg/mL) | Interpretación |
+|:---|:---|
+| **< 300** | Normal. Sin neurodegeneración activa significativa. |
+| **300 – 450** | Elevación leve. Monitorizar. |
+| **> 450** | **N+** — Daño neuronal activo. Criterio diagnóstico de EA. |
+
+---
+
+### 3. pTau — Tau Fosforilado (Marcador T)
+El **pTau** (fosforilado en Treonina 181 o 217) es **específico de la EA**. Refleja la formación de
+ovillos neurofibrilares intraneuronales, el segundo pilar patológico de la enfermedad.
+
+| pTau (pg/mL) | Estado ATN | Interpretación |
+|:---|:---|:---|
+| **< 35** | T— | Sin patología Tau activa en EA. |
+| **35 – 60** | T? | Zona de incertidumbre clínica. |
+| **> 60** | **T+** | Formación de ovillos confirmada. Específico EA. |
+        """)
+
+    # ── SECCIÓN 5: Panel Demográfico y Genético ─────────────────────────────
+    with st.expander("👤 Perfil Demográfico y Factor Genético (APOE4)"):
+        st.markdown("""
+### Edad
+El mayor factor de riesgo no modificable para la EA. La prevalencia aumenta exponencialmente tras los 65 años.
+El modelo tiene en cuenta la edad como variable continua para contextualizar los biomarcadores.
+
+### Nivel Educativo
+La **reserva cognitiva** acumulada durante la educación formal puede retrasar la manifestación clínica de la EA
+aun cuando la patología biológica está presente. Un paciente con 20 años de educación y MMSE de 22 podría
+tener mayor daño subyacente que uno con 8 años de educación y la misma puntuación.
+
+### Género
+Estadísticamente, las mujeres presentan mayor riesgo de EA, parcialmente relacionado con la longevidad diferencial
+y factores hormonales posmenopáusicos.
+
+### APOE4 — Apolipoproteína E Genotipo 4
+El **APOE ε4** es el principal factor de riesgo genético conocido para la EA esporádica de inicio tardío.
+
+| Genotipo | Riesgo Relativo EA |
+|:---|:---|
+| APOE2/2 (no portador) | Factor protector |
+| APOE3/3 (más común) | Riesgo basal de referencia |
+| APOE3/4 (portador 1 alelo) | ~3-4× mayor riesgo |
+| APOE4/4 (portador 2 alelos) | ~8-12× mayor riesgo |
+
+IMPORTANTE: Ser portador de APOE4 no implica desarrollar EA. Es un factor de riesgo probabilístico, no determinístico.
+        """)
+
+    # ── SECCIÓN 6: Motor de Diagnóstico ─────────────────────────────────────
+    with st.expander("⚙️ Motor de Diagnóstico — Arquitectura XGBoost"):
+        st.markdown("""
+### Algoritmo: XGBoost (Extreme Gradient Boosting)
+**XGBoost** es un algoritmo de ensamble basado en árboles de decisión que optimiza la función de pérdida
+mediante **Gradient Boosting** secuencial. Cada nuevo árbol corrige los errores del conjunto anterior.
+
+**Por qué XGBoost para datos médicos tabulares:**
+- Domina en benchmarks con datos estructurados mixtos (numéricos + categóricos).
+- Manejo nativo de valores faltantes (frecuentes en datos clínicos reales).
+- Regularización L1/L2 incorporada que previene el sobreajuste.
+- Alta interpretabilidad via SHAP Values, crítica en aplicaciones médicas.
+- Demostrada superioridad en datasets ADNI y OASIS en literatura peer-reviewed.
+
+### Dataset de Entrenamiento
+- **ADNI (Alzheimer's Disease Neuroimaging Initiative):** Cohorte longitudinal multicéntrica de EEUU con más de
+  2.000 participantes. Incluye MRI, PET, LCR, genómica y neuropsicología en múltiples visitas de seguimiento.
+- **OASIS-3 (Open Access Series of Imaging Studies):** 1.378 participantes, >2.000 sesiones de neuroimagen.
+  Open access (acceso libre) facilitado por Washington University in St. Louis.
+
+### Features de Entrada (14 Variables)
+`MMSE, CDR, FAQ, Género, Educación, Edad, APOE4, Hipocampo, Entorrinal, Temporal Medio, Ventrículos, Aβ42, Tau, pTau`
+
+### Métricas de Rendimiento
+| Métrica | Valor |
+|:---|:---|
+| **Accuracy** | ~88% |
+| **F1-Score Macro** | ~0.87 |
+| **AUC-ROC (clase AD)** | ~0.96 |
+        """)
+
+    # ── SECCIÓN 7: Escáner NLP ───────────────────────────────────────────────
+    with st.expander("🔍 Escáner NLP — Extracción Automática de Informes Clínicos"):
+        st.markdown("""
+### ¿Cómo funciona el Escáner NLP?
+El módulo de **Procesamiento de Lenguaje Natural (NLP)** implementa un motor de extracción de información
+based en **expresiones regulares (Regex)** con tolerancia a variaciones lingüísticas clínicas en castellano.
+
+**Proceso:**
+1. El clínico pega el texto libre de un informe médico en el cuadro de texto.
+2. El sistema busca patrones que correspondan a valores de biomarcadores (ej: `MMSE de 22`, `TAU: 480`, `Hipocampo 0.0038`).
+3. Los valores extraídos se inyectan automáticamente en los sliders de la aplicación.
+4. El médico puede corregir manualmente cualquier valor antes de ejecutar el modelo.
+
+**Ejemplo de texto compatible:**
+```
+Paciente varón de 78 años, MMSE de 21 puntos, CDR de 1.
+ABETA en LCR: 750 pg/mL. TAU: 520. PTAU de 72.
+Hipocampo 0.0031, Entorrinal 0.0019, Ventrículos 0.065. APOE4 portador.
+```
+
+**Biomarcadores detectados automáticamente:** MMSE, CDR, FAQ, Edad, Aβ42, Tau, pTau, Hipocampo, Entorrinal, Ventrículos, APOE4.
+        """)
+
+    # ── SECCIÓN 8: Agente IA ──────────────────────────────────────────────────
+    with st.expander("🤖 Agente de IA — Generación de Informes Clínicos"):
+        st.markdown("""
+### ¿Qué hace el Agente IA?
+El agente transforma los datos numéricos en un **informe médico narrativo estructurado**, correlacionando
+los biomarcadores siguiendo el sistema ATN de las guías NIA-AA 2018. Actúa como segundo lector especializado.
+
+### Proveedores Disponibles
+
+**🔵 OpenAI**
+| Modelo | Velocidad | Calidad | Coste Aprox. |
+|:---|:---|:---|:---|
+| `gpt-4o-mini` | ⚡ Rápido | Alta | ~$0.0001/informe |
+| `gpt-4o` | 🐢 Moderado | Muy Alta | ~$0.005/informe |
+| `gpt-3.5-turbo` | ⚡ Rápido | Media | ~$0.00005/informe |
+
+**🟢 Google Gemini**
+| Modelo | Velocidad | Calidad | Coste Aprox. |
+|:---|:---|:---|:---|
+| `gemini-1.5-flash` | ⚡ Muy Rápido | Alta | Cuota gratuita disponible |
+| `gemini-1.5-pro` | 🐢 Moderado | Muy Alta | ~$0.0035/1k tokens |
+| `gemini-1.0-pro` | ⚡ Rápido | Media | Cuota gratuita disponible |
+
+### ¿Cómo obtener una API Key?
+- **OpenAI:** [platform.openai.com/api-keys](https://platform.openai.com/api-keys) — Requiere cuenta y método de pago.
+- **Gemini:** [aistudio.google.com/app/apikey](https://aistudio.google.com/app/apikey) — **Capa gratuita disponible.**
+
+### Seguridad
+Las API Keys introducidas en esta interfaz **no se almacenan en el servidor** en ningún momento.
+Permanecen únicamente en la memoria de la sesión de Streamlit, que se destruye al cerrar el navegador.
+El usuario tiene control total sobre sus credenciales en todo momento.
+        """)
+
+    # ── SECCIÓN 9: Disclaimer ────────────────────────────────────────────────
+    st.markdown("---")
+    st.warning("""
+    ⚕️ **Aviso de Uso Clínico Importante**
+
+    NeuroNet-Fusion es una herramienta de **apoyo a la decisión clínica** diseñada para uso en investigación
+    y formación académica. Los resultados producidos por este sistema **NO constituyen un diagnóstico médico
+    definitivo** y no deben sustituir el juicio de un profesional sanitario cualificado.
+
+    El diagnóstico definitivo de la Enfermedad de Alzheimer requiere evaluación clínica completa,
+    confirmación mediante neuroimagen, análisis de LCR y seguimiento longitudinal por un especialista en neurología.
+    """)
+    st.info("📖 Proyecto Fin de Máster — IEBS Digital School | Inteligencia Artificial y Big Data | 2025")
