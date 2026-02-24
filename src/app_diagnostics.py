@@ -144,18 +144,19 @@ with c_side1:
             st.sidebar.success(f"✅ {len(extracted)} biomarcadores.")
         else:
             st.sidebar.warning("No detectado.")
-with c_side2:
-    if st.button("🗑️ Limpiar", use_container_width=True):
-        for k in ['mmse', 'age', 'abeta', 'tau', 'ptau', 'hippo', 'ento', 'vent', 'faq', 'apoe', 'cdr', 'p_name', 'p_id', 'p_history', 'p_physician']:
-            st.session_state[k] = "" if 'p_' in k else 0
-        st.rerun()
-
-# Inicializar estado si no existe
+# Inicializar estado y definir valores por defecto
 defaults = {
     'mmse': 24, 'age': 72, 'abeta': 850, 'tau': 450, 'ptau': 65, 
     'hippo': 0.0045, 'ento': 0.0028, 'vent': 0.08, 'faq': 10, 'apoe': 0, 'cdr': 0.5,
     'p_name': "", 'p_id': "", 'p_history': "", 'p_physician': ""
 }
+
+with c_side2:
+    if st.button("🗑️ Limpiar", use_container_width=True):
+        for k, v in defaults.items():
+            st.session_state[k] = v
+        st.rerun()
+
 for k, v in defaults.items():
     if k not in st.session_state:
         st.session_state[k] = v
