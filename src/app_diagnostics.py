@@ -67,7 +67,7 @@ if ai_provider == "OpenAI":
 else:
     env_gemini_key = os.getenv("GEMINI_API_KEY", "")
     gemini_api_key = st.sidebar.text_input("API Key", value=env_gemini_key, type="password", placeholder="AIza... (Gemini)")
-    selected_model = st.sidebar.selectbox("Modelo Gemini", ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro"], index=0)
+    selected_model = st.sidebar.selectbox("Modelo Gemini", ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-2.0-flash", "gemini-1.5-flash-8b"], index=0)
 
 def extract_from_text(text):
     data = {}
