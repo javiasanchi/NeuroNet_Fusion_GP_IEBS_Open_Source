@@ -4,7 +4,12 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Instalar dependencias Python (sin apt-get — todo puro Python)
+# Instalar dependencias del sistema necesarias
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Instalar dependencias Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 

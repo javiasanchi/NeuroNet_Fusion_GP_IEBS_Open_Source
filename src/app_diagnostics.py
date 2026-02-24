@@ -16,7 +16,8 @@ load_dotenv()
 # Configuración ultra-ancha
 st.set_page_config(page_title="NeuroNet-Fusion | AI Clinical Scanner", layout="wide", page_icon="🧠")
 
-MODEL_PATH = 'E:/MACHINE LEARNING/proyecto_global_IEBS/Analytical_Biomarker_Project/models/neuro_fusion_final_v1.joblib'
+# Path del modelo optimizado para el despliegue (Linux/Docker & Local)
+MODEL_PATH = os.getenv('MODEL_PATH', 'models/neuro_fusion_final_v1.joblib')
 
 @st.cache_resource
 def load_assets():
