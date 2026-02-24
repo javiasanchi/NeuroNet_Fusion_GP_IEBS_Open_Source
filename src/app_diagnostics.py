@@ -99,6 +99,9 @@ def extract_from_text(text):
     return data
 
 st.sidebar.markdown("---")
+st.sidebar.markdown("**📚 Glosario y Documentación**")
+st.sidebar.info("ℹ️ Consulta la pestaña **📚 Documentación Técnica** (arriba) para ver el glosario completo de biomarcadores, la arquitectura del modelo y la guía del agente IA.")
+st.sidebar.markdown("---")
 
 # NLP Scanner en sidebar
 st.sidebar.markdown("**🔍 Escáner NLP de Informes**")
@@ -159,8 +162,8 @@ with tab_app:
         with col2:
             st.markdown("### 🧪 Imagen y LCR (ATN)")
             with st.container(border=True):
-                hippo = st.slider("Hipocampo (Vol. Norm.)", 0.001, 0.010, float(st.session_state.hippo), format="%.5f")
-                ento = st.slider("Entorrinal (Vol. Norm.)", 0.001, 0.010, float(st.session_state.ento), format="%.5f")
+                hippo = st.slider("Hipocampo (Vol. Norm.)", 0.001, 0.010, float(st.session_state.hippo), step=0.0001, format="%.4f")
+                ento = st.slider("Entorrinal (Vol. Norm.)", 0.001, 0.010, float(st.session_state.ento), step=0.0001, format="%.4f")
                 vent = st.slider("Ventrículos (Vol. Norm.)", 0.010, 0.100, float(st.session_state.vent), format="%.4f")
                 c3, c4, c5 = st.columns(3)
                 with c3: abeta = st.number_input("Aβ42", 200, 2000, int(st.session_state.abeta))
@@ -181,27 +184,33 @@ with tab_app:
             st.markdown("### 📊 Diagnóstico")
             with st.container(border=True):
                 st.markdown(f"""
-                <div style='background:{colors[class_idx]}18; border:2px solid {colors[class_idx]}; border-radius:10px; padding:10px 6px; text-align:center; margin-bottom:8px;'>
-                    <div style='font-size:0.7rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.08em;'>Predicción Principal</div>
-                    <div style='font-size:1.6rem; font-weight:800; color:{colors[class_idx]};'>{lbls_short[class_idx]}</div>
-                    <div style='font-size:0.75rem; color:{colors[class_idx]};'>{probs[class_idx]*100:.1f}% confianza</div>
+                <div style='background:{colors[class_idx]}18; border:2px solid {colors[class_idx]}; border-radius:10px; padding:10px 6px; text-align:center; margin-bottom:6px;'>
+                    <div style='font-size:0.68rem; opacity:0.8; text-transform:uppercase; letter-spacing:0.08em;'>Predicción Principal</div>
+                    <div style='font-size:1.5rem; font-weight:800; color:{colors[class_idx]};'>{lbls_short[class_idx]}</div>
+                    <div style='font-size:0.73rem; color:{colors[class_idx]};'>{probs[class_idx]*100:.1f}% confianza</div>
                 </div>
                 """, unsafe_allow_html=True)
-                # Mini barras de prob
-                for i, (lbl, prob, col) in enumerate(zip(lbls_short, probs, colors)):
-                    st.markdown(f"""
-                    <div style='margin-bottom:4px;'>
-                        <div style='display:flex; justify-content:space-between; font-size:0.72rem;'>
-                            <span style='color:{col};font-weight:600;'>{lbl}</span>
-                            <span>{prob*100:.1f}%</span>
-                        </div>
-                        <div style='background:#21262D; border-radius:4px; height:6px;'>
-                            <div style='background:{col}; width:{prob*100:.1f}%; height:6px; border-radius:4px;'></div>
-                        </div>
-                    </div>
-                    """, unsafe_allow_html=True)
-                st.markdown("<br>", unsafe_allow_html=True)
-                if st.button(f"✨ Generar Informe IA", use_container_width=True, key="gen_btn"):
+                # Gráfico Plotly compact
+                fig = go.Figure(go.Bar(
+                    x=probs * 100,
+                    y=lbls_short,
+                    orientation='h',
+                    marker_color=colors,
+                    text=[f"{p*100:.1f}%" for p in probs],
+                    textposition='auto',
+                    textfont=dict(size=11)
+                ))
+                fig.update_layout(
+                    height=110,
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    paper_bgcolor='rgba(0,0,0,0)',
+                    plot_bgcolor='rgba(0,0,0,0)',
+                    font=dict(color='#E6EDF3', size=11),
+                    xaxis=dict(range=[0, 100], showticklabels=False, showgrid=False, zeroline=False),
+                    yaxis=dict(showgrid=False)
+                )
+                st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
+                if st.button("✨ Generar Informe IA", use_container_width=True, key="gen_btn"):
                     st.session_state['run_ai'] = True
 
         # --- GENERACIÓN DE INFORME IA ---
