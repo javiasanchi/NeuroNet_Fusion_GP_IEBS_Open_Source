@@ -134,20 +134,31 @@ st.sidebar.markdown("---")
 # NLP Scanner en sidebar
 st.sidebar.markdown("**🔍 Escáner NLP de Informes**")
 raw_text_sidebar = st.sidebar.text_area("Pega el informe clínico:", height=90, placeholder="Ej: Varón 75 años, MMSE 22, TAU 480, Hipocampo 0.003...")
-if st.sidebar.button("🚀 Extraer Biomarcadores", use_container_width=True):
-    extracted = extract_from_text(raw_text_sidebar)
-    if extracted:
-        for k, v in extracted.items():
-            st.session_state[k] = v
-        st.sidebar.success(f"✅ {len(extracted)} biomarcadores extraídos.")
-    else:
-        st.sidebar.warning("No se detectaron biomarcadores.")
+c_side1, c_side2 = st.sidebar.columns(2)
+with c_side1:
+    if st.button("🚀 Escanear", use_container_width=True):
+        extracted = extract_from_text(raw_text_sidebar)
+        if extracted:
+            for k, v in extracted.items():
+                st.session_state[k] = v
+            st.sidebar.success(f"✅ {len(extracted)} biomarcadores.")
+        else:
+            st.sidebar.warning("No detectado.")
+with c_side2:
+    if st.button("🗑️ Limpiar", use_container_width=True):
+        for k in ['mmse', 'age', 'abeta', 'tau', 'ptau', 'hippo', 'ento', 'vent', 'faq', 'apoe', 'cdr', 'p_name', 'p_id', 'p_history', 'p_physician']:
+            st.session_state[k] = "" if 'p_' in k else 0
+        st.rerun()
 
 # Inicializar estado si no existe
-for k in ['mmse', 'age', 'abeta', 'tau', 'ptau', 'hippo', 'ento', 'vent', 'faq', 'apoe', 'cdr']:
+defaults = {
+    'mmse': 24, 'age': 72, 'abeta': 850, 'tau': 450, 'ptau': 65, 
+    'hippo': 0.0045, 'ento': 0.0028, 'vent': 0.08, 'faq': 10, 'apoe': 0, 'cdr': 0.5,
+    'p_name': "", 'p_id': "", 'p_history': "", 'p_physician': ""
+}
+for k, v in defaults.items():
     if k not in st.session_state:
-        defaults = {'mmse': 24, 'age': 72, 'abeta': 850, 'tau': 450, 'ptau': 65, 'hippo': 0.0045, 'ento': 0.0028, 'vent': 0.08, 'faq': 10, 'apoe': 0, 'cdr': 0.5}
-        st.session_state[k] = defaults.get(k)
+        st.session_state[k] = v
 
 # --- NAVEGACIÓN PRINCIPAL ---
 tab_app, tab_doc = st.tabs(["🧠 NeuroNet-Fusion AI", "📚 Documentación Técnica"])
@@ -168,6 +179,26 @@ with tab_app:
 
     if data_pkg:
         model, features = data_pkg['model'], data_pkg['features']
+
+        # NUEVO: Bloque de Datos Administrativos y Clínicos
+        with st.expander("📋 1. Identificación y Antecedentes (Opcional para el Neurólogo)", expanded=False):
+            c_adm1, c_adm2 = st.columns(2)
+            with c_adm1:
+                p_name = st.text_input("Nombre del Paciente", value=st.session_state.p_name, placeholder="Ej: Don Juan Martínez", key="p_name_inp")
+                p_id = st.text_input("ID / Nº Historia Clínica", value=st.session_state.p_id, placeholder="Ej: HC-12345/2026", key="p_id_inp")
+            with c_adm2:
+                p_physician = st.text_input("Neurólogo Responsable", value=st.session_state.p_physician, placeholder="Dr/a. García", key="p_phys_inp")
+                p_date = st.date_input("Fecha Clínica", format="DD/MM/YYYY")
+            
+            p_history = st.text_area("Motivo de Consulta y Antecedentes Médicos", value=st.session_state.p_history, placeholder="Ej: Pérdida persistente de memoria episódica, antecedentes de hipertensión...", key="p_hist_inp")
+            
+            # Persistir en session_state para el informe
+            st.session_state.p_name = p_name
+            st.session_state.p_id = p_id
+            st.session_state.p_history = p_history
+            st.session_state.p_physician = p_physician
+
+        st.markdown("<div style='margin-bottom: 12px;'></div>", unsafe_allow_html=True)
 
         # Layout 3 Columnas: Perfil | ATN | Resultado
         col1, col2, col3 = st.columns([1.1, 1.1, 0.9], gap="medium")
@@ -250,8 +281,14 @@ with tab_app:
             else:
                 try:
                     with st.spinner("Redactando informe clínico..."):
-                        contexto_paciente = f"""DATOS CLÍNICOS:\n- Perfil: {age} años, {'Mujer' if gender_val==1 else 'Varón'}, {educat} años educ.\n- APOE4: {'Portador' if apoe4==1 else 'No portador'}\n- Cognición: MMSE {bc_mmse}/30, CDR {bc_cdr}, FAQ {bc_faq}/30\n- MRI: Hipocampo {hippo:.5f}, Entorrinal {ento:.5f}, Ventrículos {vent:.4f}\n- LCR: Aβ42 {abeta}, Tau {tau}, pTau {ptau_val}\n- Predicción NeuroNet: {lbls[class_idx]} ({probs[class_idx]*100:.1f}%)"""
-                        system_prompt = "Eres un neurólogo experto. Genera un informe médico formal basado en los biomarcadores proporcionados, siguiendo el sistema ATN (NIA-AA). El tono debe ser profesional y detallado."
+                        # Construir contexto enriquecido con datos administrativos
+                        identificacion = f"PACIENTE: {st.session_state.p_name or 'N/A'} | ID: {st.session_state.p_id or 'N/A'}\nFECHA: {p_date if 'p_date' in locals() else 'Hoy'}\nFIRMADO POR: {st.session_state.p_physician or 'Neurólogo de Guardia'}"
+                        antecedentes = f"ANTECEDENTES/MOTIVO: {st.session_state.p_history or 'No proporcionado'}"
+                        biomarcadores = f"DATOS BIOLÓGICOS:\n- Perfil: {age} años, {'Mujer' if gender_val==1 else 'Varón'}, {educat} años educ.\n- APOE4: {'Portador' if apoe4==1 else 'No portador'}\n- Cognición: MMSE {bc_mmse}/30, CDR {bc_cdr}, FAQ {bc_faq}/30\n- MRI: Hipocampo {hippo:.4f}, Entorrinal {ento:.4f}, Ventrículos {vent:.4f}\n- LCR: Aβ42 {abeta}, Tau {tau}, pTau {ptau_val}\n- Predicción NeuroNet: {lbls[class_idx]} ({probs[class_idx]*100:.1f}%)"
+                        
+                        contexto_paciente = f"{identificacion}\n\n{antecedentes}\n\n{biomarcadores}"
+                        
+                        system_prompt = "Eres un neurólogo experto. Genera un informe médico formal y estructurado. Debes incluir encabezados para: Datos del Paciente, Justificación Clínica, Resultados de Biomarcadores, Interpretación ATN y Recomendaciones. El tono debe ser de rigor académico y clínico."
                         if ai_provider == "OpenAI":
                             client = OpenAI(api_key=openai_api_key)
                             response = client.chat.completions.create(model=selected_model, messages=[{"role": "system", "content": system_prompt}, {"role": "user", "content": contexto_paciente}], temperature=0.3)
