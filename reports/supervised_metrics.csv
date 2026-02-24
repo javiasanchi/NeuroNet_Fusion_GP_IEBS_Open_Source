@@ -1,0 +1,5 @@
+Model,BestParams,Accuracy,F1,AUC
+LogisticRegression,{'C': 0.1},0.66,0.6581632827248263,0.8577333333333333
+SVM,"{'C': 10, 'gamma': 'scale'}",0.7025,0.7015688993388396,0.9028916666666666
+RandomForest,"{'max_depth': None, 'n_estimators': 100}",0.6,0.585618338586092,0.8357500000000001
+GradientBoosting,"{'learning_rate': 0.1, 'max_iter': 100}",0.63,0.6198183473736872,0.8498583333333332

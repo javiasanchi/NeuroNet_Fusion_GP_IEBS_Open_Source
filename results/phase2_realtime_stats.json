@@ -1,0 +1,24 @@
+{
+  "results": {
+    "XGBoost": {
+      "best_acc": 0.91185620463187,
+      "trials": 20,
+      "total_trials": 20,
+      "status": "Completado"
+    },
+    "LightGBM": {
+      "best_acc": 0.9111648807466298,
+      "trials": 20,
+      "total_trials": 20,
+      "status": "Completado"
+    },
+    "CatBoost": {
+      "best_acc": 0.91185620463187,
+      "trials": 20,
+      "total_trials": 20,
+      "status": "Completado"
+    }
+  },
+  "last_update": 1771683481.563332,
+  "current_algo": "CatBoost"
+}

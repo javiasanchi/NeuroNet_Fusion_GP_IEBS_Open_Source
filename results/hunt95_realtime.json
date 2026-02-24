@@ -1,0 +1,51 @@
+{
+  "runs": {
+    "R1_baseline_full": {
+      "config": "Baseline ganador - full data",
+      "acc": 0.90463,
+      "f1": 0.90025,
+      "val_logloss": 0.217514,
+      "status": "Completado",
+      "elapsed_s": 0.8,
+      "ts": "12:16:12"
+    },
+    "R2_interactions": {
+      "config": "Interacciones clinicas + 1500 arboles",
+      "acc": 0.911541,
+      "f1": 0.909244,
+      "val_logloss": 0.205885,
+      "status": "Completado",
+      "elapsed_s": 1.6,
+      "ts": "12:16:14"
+    },
+    "R3_deep_reg": {
+      "config": "Profundo + Regularizacion fuerte",
+      "acc": 0.907395,
+      "f1": 0.905226,
+      "val_logloss": 0.216621,
+      "status": "Completado",
+      "elapsed_s": 2.1,
+      "ts": "12:16:16"
+    },
+    "R4_poly_slowlr": {
+      "config": "LR lento + Features polinomiales",
+      "acc": 0.911541,
+      "f1": 0.907674,
+      "val_logloss": 0.247251,
+      "status": "Completado",
+      "elapsed_s": 2.7,
+      "ts": "12:16:19"
+    },
+    "R5_classweight_poly": {
+      "config": "Pesos por clase + poly",
+      "acc": 0.892882,
+      "f1": 0.89848,
+      "val_logloss": 1.075727,
+      "status": "Completado",
+      "elapsed_s": 1.1,
+      "ts": "12:16:20"
+    }
+  },
+  "last_update": 1771758980.271723,
+  "best_acc": 0.911541
+}

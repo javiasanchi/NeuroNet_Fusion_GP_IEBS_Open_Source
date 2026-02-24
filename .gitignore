@@ -1,0 +1,58 @@
+# ==============================================================
+# NEURONET-FUSION — .gitignore
+# Proyecto Final Postgrado IA — IEBS Business School 2026
+# ==============================================================
+
+# ─── ENTORNO VIRTUAL ──────────────────────────────────────────
+venv_alzheimer/
+venv/
+.venv/
+env/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+dist/
+build/
+
+# ─── DATOS BRUTOS (No subir a GitHub — 184 GB) ────────────────
+# Los datos están disponibles públicamente en ADNI y OASIS-3
+# Ver instrucciones en README.md > Sección "Datos"
+data/raw/
+data/external/
+data/interim/
+data/processed/*.csv   # Solo se excluyen los CSV de datos crudos grandes
+
+# ─── IMÁGENES MÉDICAS ─────────────────────────────────────────
+*.nii
+*.nii.gz
+*.dcm
+*.mgz
+*.mgh
+
+# ─── MODELOS PESADOS (>100MB, límite de GitHub) ───────────────
+# Solo se conserva el modelo XGBoost final (~5MB)
+models/*.pt
+models/*.pth
+models/*.ckpt
+checkpoints/
+lightning_logs/
+catboost_info/
+
+# ─── LOGS DE ENTRENAMIENTO ────────────────────────────────────
+*.log
+logs/
+runs/
+wandb/
+mlruns/
+
+# ─── IDE Y SISTEMA ────────────────────────────────────────────
+.vscode/
+.idea/
+*.DS_Store
+Thumbs.db
+.env
+*.env.local
+
+# ─── JUPYTER ──────────────────────────────────────────────────
+.ipynb_checkpoints/

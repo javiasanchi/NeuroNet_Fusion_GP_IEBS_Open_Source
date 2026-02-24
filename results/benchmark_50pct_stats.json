@@ -1,0 +1,102 @@
+{
+  "results": {
+    "LightGBM_LGB_A_shallow_fast": {
+      "model": "LightGBM",
+      "config": "LGB_A_shallow_fast",
+      "acc": 0.883126,
+      "f1": 0.882148,
+      "status": "Completado",
+      "elapsed": 1.33
+    },
+    "LightGBM_LGB_B_deep_slow": {
+      "model": "LightGBM",
+      "config": "LGB_B_deep_slow",
+      "acc": 0.881743,
+      "f1": 0.881058,
+      "status": "Completado",
+      "elapsed": 12.16
+    },
+    "LightGBM_LGB_C_regularized": {
+      "model": "LightGBM",
+      "config": "LGB_C_regularized",
+      "acc": 0.883817,
+      "f1": 0.883036,
+      "status": "Completado",
+      "elapsed": 3.8
+    },
+    "LightGBM_LGB_D_balanced": {
+      "model": "LightGBM",
+      "config": "LGB_D_balanced",
+      "acc": 0.872061,
+      "f1": 0.872086,
+      "status": "Completado",
+      "elapsed": 7.36
+    },
+    "XGBoost_XGB_A_shallow_fast": {
+      "model": "XGBoost",
+      "config": "XGB_A_shallow_fast",
+      "acc": 0.88935,
+      "f1": 0.887786,
+      "status": "Completado",
+      "elapsed": 1.03
+    },
+    "XGBoost_XGB_B_deep_regularized": {
+      "model": "XGBoost",
+      "config": "XGB_B_deep_regularized",
+      "acc": 0.88935,
+      "f1": 0.888042,
+      "status": "Completado",
+      "elapsed": 4.96
+    },
+    "XGBoost_XGB_C_dart": {
+      "model": "XGBoost",
+      "config": "XGB_C_dart",
+      "acc": 0.883126,
+      "f1": 0.882054,
+      "status": "Completado",
+      "elapsed": 95.54
+    },
+    "XGBoost_XGB_D_conservative": {
+      "model": "XGBoost",
+      "config": "XGB_D_conservative",
+      "acc": 0.883817,
+      "f1": 0.882063,
+      "status": "Completado",
+      "elapsed": 1.7
+    },
+    "CatBoost_CAT_A_fast": {
+      "model": "CatBoost",
+      "config": "CAT_A_fast",
+      "acc": 0.881743,
+      "f1": 0.880812,
+      "status": "Completado",
+      "elapsed": 0.66
+    },
+    "CatBoost_CAT_B_deep": {
+      "model": "CatBoost",
+      "config": "CAT_B_deep",
+      "acc": 0.884509,
+      "f1": 0.882656,
+      "status": "Completado",
+      "elapsed": 2.99
+    },
+    "CatBoost_CAT_C_regularized": {
+      "model": "CatBoost",
+      "config": "CAT_C_regularized",
+      "acc": 0.886584,
+      "f1": 0.884893,
+      "status": "Completado",
+      "elapsed": 1.0
+    },
+    "CatBoost_CAT_D_balanced": {
+      "model": "CatBoost",
+      "config": "CAT_D_balanced",
+      "acc": 0.881743,
+      "f1": 0.880439,
+      "status": "Completado",
+      "elapsed": 0.84
+    }
+  },
+  "last_update": 1771686323.7339275,
+  "current_task": "CatBoost_CAT_D_balanced"
+}

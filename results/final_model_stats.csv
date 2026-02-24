@@ -1,0 +1,5 @@
+Metric,Value
+Accuracy,0.8594594594594595
+F1-Score,0.8627467001909005
+Train Samples,9616.0
+Test Samples,2405.0

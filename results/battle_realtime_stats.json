@@ -1,0 +1,43 @@
+{
+  "results": [
+    {
+      "Algo": "RandomForest",
+      "Acc": 0.9011406844106464,
+      "F1": 0.9006250910524554,
+      "status": "Finalizado"
+    },
+    {
+      "Algo": "XGBoost",
+      "Acc": 0.9025233321811269,
+      "F1": 0.9005605550252684,
+      "status": "Finalizado"
+    },
+    {
+      "Algo": "LightGBM",
+      "Acc": 0.9073625993778085,
+      "F1": 0.9062398778220477,
+      "status": "Finalizado"
+    },
+    {
+      "Algo": "CatBoost",
+      "Acc": 0.9032146560663671,
+      "F1": 0.9002146351548952,
+      "status": "Finalizado"
+    },
+    {
+      "Algo": "MLP-NN",
+      "Acc": 0.28862772208779813,
+      "F1": 0.22522062270983967,
+      "status": "Finalizado"
+    },
+    {
+      "Algo": "BATTLE_OVER",
+      "Acc": 0,
+      "F1": 0,
+      "status": "Complete"
+    }
+  ],
+  "last_update": 1771683128.1435993,
+  "current_algo": "BATTLE_OVER",
+  "global_status": "Phase 1 Done"
+}

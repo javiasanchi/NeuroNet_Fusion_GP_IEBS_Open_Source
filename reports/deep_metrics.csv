@@ -1,0 +1,2 @@
+Model,BestParams,Accuracy,F1,AUC
+DeepFusionMGCA,"LR=1e-4, Fusion=CrossAttn",0.53,0.48745761798361237,0.81495
