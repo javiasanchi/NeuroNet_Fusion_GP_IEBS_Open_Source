@@ -57,7 +57,7 @@ if ai_provider == "OpenAI":
 else:
     env_gemini_key = os.getenv("GEMINI_API_KEY", "")
     gemini_api_key = st.sidebar.text_input("Gemini API Key", value=env_gemini_key, type="password", placeholder="AIza...")
-    selected_model = st.sidebar.selectbox("Modelo", ["gemini-1.5-flash", "gemini-1.5-pro"], index=0)
+    selected_model = st.sidebar.selectbox("Modelo", ["gemini-1.5-flash", "gemini-1.5-pro", "gemini-1.0-pro"], index=0)
     st.sidebar.info("Google Gemini ofrece alto rendimiento con ventanas de contexto amplias.")
 
 # --- MOTOR DE EXTRACCIÓN NLP MEJORADO ---
