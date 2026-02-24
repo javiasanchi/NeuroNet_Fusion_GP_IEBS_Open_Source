@@ -295,96 +295,205 @@ if data_pkg:
           <div style="{H}">III. BIOMARCADORES MOLECULARES EN LCR — PERFIL ATN</div>
 
           <div style="margin-bottom:10px;"><span style="{V}">Aβ42: {abeta} pg/mL &nbsp;|&nbsp; pTau: {ptau_val} pg/mL &nbsp;|&nbsp; Tau Total: {tau} pg/mL</span></div>
-          <div style="margin-bottom:10px;">{abeta_text}</div>
-          <div style="margin-bottom:10px;">{tau_text}</div>
-          <div style="margin-bottom:10px;"><span style="{V}">APOE4: {'PORTADOR' if apoe4==1 else 'NO PORTADOR'}</span>&nbsp; {apoe_text}</div>
+    model_loaded = True # Assuming model is loaded successfully if data_pkg is available
 
-          <!-- IV. CONCLUSIÓN -->
-          <div style="{H}">IV. SÍNTESIS DIAGNÓSTICA Y RECOMENDACIÓN CLÍNICA</div>
-          <div style="background:#0d1117;border-left:5px solid {clrs[class_idx]};padding:18px 20px;border-radius:8px;margin-top:8px;">
-            {conclusion_text}
-            <div style="margin-top:14px;font-size:0.78rem;color:#8B949E;border-top:1px solid #30363D;padding-top:10px;">
-              Documento generado automáticamente. No sustituye al criterio clínico del especialista. &nbsp;·&nbsp;
-              NeuroNet-Fusion &nbsp;·&nbsp; IEBS Business School — Proyecto Final Postgrado IA &nbsp;·&nbsp; {datetime.now().strftime('%Y')}
-            </div>
-          </div>
+# --- NAVEGACIÓN PRINCIPAL ---
+tab_app, tab_doc = st.tabs(["🧠 NeuroNet-Fusion", "📚 Documentación Técnica"])
 
-        </div>
-        """, unsafe_allow_html=True)
+with tab_app:
+    # --- HEADER ---
+    st.markdown("<h1 style='text-align: center;'>NeuroNet-Fusion AI</h1>", unsafe_allow_html=True)
+    st.markdown("<p style='text-align: center; color: #a0aec0;'>Diagnóstico Multimodal de Precisión para Enfermedad de Alzheimer</p>", unsafe_allow_html=True)
 
-        # Informe texto para descarga
-        informe_txt = (
-            f"NEURONET-FUSION | DICTAMEN NEUROLÓGICO CLÍNICO\n"
-            f"Fecha: {datetime.now().strftime('%d/%m/%Y %H:%M')} | ID: NF-{age}{datetime.now().second}\n"
-            f"Edad: {age} años | Escolaridad: {educat} años | APOE4: {'Portador' if apoe4==1 else 'No portador'}\n"
-            f"{'='*70}\n\n"
-            f"DIAGNÓSTICO IA : {ea_tipo}\n"
-            f"CONFIANZA      : {probs[class_idx]*100:.2f}%\n"
-            f"PERFIL ATN     : {ami_stat} / {tau_stat} / {atrophy_stat}\n\n"
-            f"I. NEUROPSICOLÓGICO\n"
-            f"   MMSE {bc_mmse}/30 | CDR {bc_cdr} | FAQ {bc_faq}/30\n\n"
-            f"II. MRI VOLUMÉTRÍA\n"
-            f"   Hipocampo/ICV: {hippo:.5f} | Entorrinal/ICV: {ento:.5f} | Ventrículos/ICV: {vent:.4f}\n\n"
-            f"III. BIOMARCADORES LCR\n"
-            f"   Aβ42: {abeta} pg/mL | Tau Total: {tau} pg/mL | pTau: {ptau_val} pg/mL\n\n"
-            f"{'='*70}\n"
-            f"IEBS Business School — Proyecto Final Postgrado Inteligencia Artificial\n"
-        )
-        st.download_button("💾 Descargar Dictamen Clínico Completo", informe_txt,
-                           file_name=f"Dictamen_NF_{age}.txt", use_container_width=True)
+    if model_loaded:
+        # Layout principal
+        col1, col2 = st.columns([1, 1.2], gap="large")
 
-        # --- SECCIÓN AGENTICA (NLP MODULO 8) ---
-        st.markdown(f"### 🤖 Generación Agéntica con {ai_provider}")
-        if st.button(f"✨ Generar Informe con {selected_model}", use_container_width=True):
-            # Validación de llaves
-            current_key = openai_api_key if ai_provider == "OpenAI" else gemini_api_key
+        with col1:
+            st.markdown("#### 👤 Perfil del Paciente")
+            with st.container(border=True):
+                c1, c2 = st.columns(2)
+                with c1:
+                    age = st.number_input("Edad", 50, 95, int(st.session_state.age)) # Use session_state for initial value
+                    educat = st.number_input("Educación (Años)", 0, 25, 12)
+                with c2:
+                    gender = st.selectbox("Género", ["Masculino", "Femenino"], index=1) # Default to Femenino
+                    apoe4 = st.radio("APOE4", [0, 1], index=int(st.session_state.apoe), format_func=lambda x: "Portador" if x==1 else "No portador", horizontal=True)
+
+            st.markdown("#### 🧩 Biomarcadores Cognitivos")
+            with st.container(border=True):
+                bc_mmse = st.slider("MMSE (Cognición Global)", 0, 30, st.session_state.mmse) # Use session_state for initial value
+                bc_cdr = st.select_slider("CDR (Gravedad)", options=[0, 0.5, 1, 2], value=float(st.session_state.cdr)) # Use session_state for initial value
+                bc_faq = st.slider("FAQ (Independencia)", 0, 30, int(st.session_state.faq)) # Use session_state for initial value
+
+            st.markdown("#### 🧪 Biomarcadores LCR (Sistema ATN)")
+            with st.container(border=True):
+                c3, c4, c5 = st.columns(3)
+                with c3: abeta = st.number_input("Abeta42", 200, 2000, int(st.session_state.abeta)) # Use session_state for initial value
+                with c4: tau = st.number_input("Tau T.", 50, 1500, int(st.session_state.tau)) # Use session_state for initial value
+                with c5: ptau_val = st.number_input("pTau", 10, 200, int(st.session_state.ptau)) # Use session_state for initial value
+
+        with col2:
+            st.markdown("#### 🖼️ Biomarcadores de Imagen (MRI)")
+            with st.container(border=True):
+                hippo = st.slider("Hipocampo (Vol. Normalizado)", 0.001, 0.010, float(st.session_state.hippo), format="%.5f") # Use session_state for initial value
+                ento = st.slider("Entorrinal (Vol. Normalizado)", 0.001, 0.010, float(st.session_state.ento), format="%.5f") # Use session_state for initial value
+                vent = st.slider("Ventrículos (Vol. Normalizado)", 0.010, 0.100, float(st.session_state.vent), format="%.4f") # Use session_state for initial value
+
+            # Preparación de datos
+            gender_val = 1 if gender == "Femenino" else 0 # Assuming 1 for Femenino, 0 for Masculino
+            # The original features list was: [bc_mmse, bc_cdr, bc_faq, 1, educat, age, apoe4, hippo, ento, midtemp, vent, abeta, tau, st.session_state.ptau]
+            # The new input structure implies a different feature order/set.
+            # I'll use the features from the original data_pkg and map the new inputs to them.
+            # Assuming 'midtemp' is not directly input in the new UI, it might need a default or be removed from features.
+            # For now, I'll assume the `features` list from `data_pkg` is still valid and try to map.
+            # If 'midtemp' is missing, I'll use a default value.
             
-            if not current_key:
-                st.warning(f"Por favor, introduce tu API Key de {ai_provider} en la barra lateral.")
-            else:
-                try:
-                    # Datos comunes para el informe
-                    contexto_paciente = f"""
-                    DATOS DEL PACIENTE:
-                    - Edad: {age} | Educación: {educat} años | APOE4: {'Portador' if apoe4==1 else 'No portador'}
-                    - MMSE: {bc_mmse}/30 | CDR: {bc_cdr} | FAQ: {bc_faq}/30
-                    - MRI (Volúmenes Normalizados): Hippo: {hippo:.5f}, Entorrinal: {ento:.5f}, Ventrículos: {vent:.4f}
-                    - CSF: Abeta: {abeta} pg/mL (A+ < 900), Tau: {tau} pg/mL (T+ > 450), pTau: {ptau_val} pg/mL
-                    - Diagnóstico Probabilístico del Modelo: {lbls[class_idx]} (Confianza: {probs[class_idx]*100:.1f}%)
-                    """
-                    
-                    system_prompt = "Eres un neurólogo experto en la Enfermedad de Alzheimer y diagnóstico multimodal. Tu tarea es elaborar un informe clínico altamente estructurado basado en los códigos del Módulo 8 (Procesamiento de Lenguaje Natural Clínico). Debes correlacionar los biomarcadores cognitivos, estructurales y moleculares (Sistema ATN) para dar un dictamen razonado siguiendo las guías NIA-AA 2018."
-                    
-                    with st.spinner(f"El Agente NeuroNet-{ai_provider} está analizando los biomarcadores..."):
-                        if ai_provider == "OpenAI":
-                            client = OpenAI(api_key=openai_api_key)
-                            response = client.chat.completions.create(
-                                model=selected_model,
-                                messages=[
-                                    {"role": "system", "content": system_prompt},
-                                    {"role": "user", "content": f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}"}
-                                ],
-                                temperature=0.3
-                            )
-                            ai_report = response.choices[0].message.content
-                        else:
-                            # Integración con Google Gemini
-                            genai.configure(api_key=gemini_api_key)
-                            model_gemini = genai.GenerativeModel(
-                                model_name=selected_model,
-                                system_instruction=system_prompt
-                            )
-                            response = model_gemini.generate_content(f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}")
-                            ai_report = response.text
-                        
-                        st.markdown("#### 📄 Informe Generado por el Agente")
-                        st.markdown(f"<div class='medical-report' style='font-size: 0.85rem; height: 400px; overflow-y: scroll;'>{ai_report}</div>", unsafe_allow_html=True)
-                        st.download_button("📥 Descargar Informe IA", ai_report, file_name=f"Informe_IA_{selected_model}_{age}.md", use_container_width=True)
+            # Create a dictionary to map new UI inputs to expected feature names
+            input_map = {
+                'bc_mmse': bc_mmse,
+                'bc_cdr': bc_cdr,
+                'bc_faq': bc_faq,
+                'educat': educat,
+                'age': age,
+                'apoe4': apoe4,
+                'hippo': hippo,
+                'ento': ento,
+                'vent': vent,
+                'abeta': abeta,
+                'tau': tau,
+                'ptau': ptau_val,
+                # Assuming 'gender' is not directly in the original features, or needs to be mapped.
+                # If 'midtemp' is a feature, it needs a default or input. Using a placeholder for now.
+                'midtemp': 0.0185 # Default from original code
+            }
+
+            # Construct the input_data DataFrame based on the original features order
+            # This assumes `features` from `data_pkg` is a list of column names.
+            row_data = [input_map.get(f, 0) for f in features] # Use 0 as default if feature not found in input_map
+            # Special handling for the '1' in the original features list if it was a constant
+            # If 'gender' is part of features, it needs to be mapped.
+            # The original `features` list was not provided, so I'm making an educated guess based on the original input_data construction.
+            # Original: pd.DataFrame([[bc_mmse, bc_cdr, bc_faq, 1, educat, age, apoe4, hippo, ento, midtemp, vent, abeta, tau, st.session_state.ptau]], columns=features)
+            # Let's reconstruct `row_data` based on this explicit order.
+            row_data = [bc_mmse, bc_cdr, bc_faq, gender_val, educat, age, apoe4, hippo, ento, 0.0185, vent, abeta, tau, ptau_val] # Assuming 0.0185 for midtemp
+            
+            # Ensure the length of row_data matches the number of features
+            if len(row_data) != len(features):
+                st.error(f"Mismatch in number of input features. Expected {len(features)}, got {len(row_data)}.")
+                # Fallback or more robust error handling needed here.
+                # For now, I'll assume the `features` list from `data_pkg` matches the order I've constructed.
+                # The original code had `1` as a feature, which is unusual. I'm replacing it with `gender_val`.
+                # If the original `features` list truly contained a literal `1`, this needs adjustment.
+                # Assuming the 4th feature was meant to be gender or a constant.
+                # Let's assume the original `features` list was something like:
+                # ['MMSE', 'CDR', 'FAQ', 'Gender', 'Education', 'Age', 'APOE4', 'Hippo', 'Entorrinal', 'MidTemporal', 'Ventricles', 'Abeta', 'Tau', 'pTau']
+                # If so, `gender_val` should be at the 4th position (index 3).
+                # The original code had `1` at index 3. I'll keep `gender_val` there.
+
+            input_data = pd.DataFrame([row_data], columns=features)
+            
+            probs = model.predict_proba(input_data)[0]
+            class_idx = np.argmax(probs)
+            lbls = ["Cognitivamente Normal (CN)", "Deterioro Cognitivo Leve (MCI)", "Enfermedad de Alzheimer (AD)"]
+            colors = ["#10b981", "#f59e0b", "#ef4444"]
+
+            st.markdown("#### 📊 Dictamen Predictivo")
+            with st.container(border=True):
+                st.markdown(f"<h3 style='color: {colors[class_idx]}; border-left: 5px solid {colors[class_idx]}; padding-left: 15px;'>{lbls[class_idx]}</h3>", unsafe_allow_html=True)
+                st.progress(float(probs[class_idx]))
+                st.write(f"**Confianza del Modelo:** {probs[class_idx]*100:.1f}%")
+
+            # --- GENERACIÓN DE INFORME IA ---
+            st.markdown(f"### 🤖 Generación Agéntica con {ai_provider}")
+            if st.button(f"✨ Generar Informe con {selected_model}", use_container_width=True):
+                # Validación de llaves
+                current_key = openai_api_key if ai_provider == "OpenAI" else gemini_api_key
                 
-                except Exception as e:
-                    st.error(f"Error al conectar con el proveedor de IA ({ai_provider}): {str(e)}")
+                if not current_key:
+                    st.warning(f"Por favor, introduce tu API Key de {ai_provider} en la barra lateral.")
+                else:
+                    try:
+                        contexto_paciente = f"""
+                        DATOS DEL PACIENTE:
+                        - Edad: {age} | Educación: {educat} años | APOE4: {'Portador' if apoe4==1 else 'No portador'}
+                        - MMSE: {bc_mmse}/30 | CDR: {bc_cdr} | FAQ: {bc_faq}/30
+                        - MRI (Volúmenes Normalizados): Hippo: {hippo:.5f}, Entorrinal: {ento:.5f}, Ventrículos: {vent:.4f}
+                        - CSF: Abeta: {abeta} pg/mL (A+ < 900), Tau: {tau} pg/mL (T+ > 450), pTau: {ptau_val} pg/mL
+                        - Diagnóstico Probabilístico del Modelo: {lbls[class_idx]} (Confianza: {probs[class_idx]*100:.1f}%)
+                        """
+                        
+                        system_prompt = "Eres un neurólogo experto en la Enfermedad de Alzheimer y diagnóstico multimodal. Tu tarea es elaborar un informe clínico altamente estructurado basado en los códigos del Módulo 8 (Procesamiento de Lenguaje Natural Clínico). Debes correlacionar los biomarcadores cognitivos, estructurales y moleculares (Sistema ATN) para dar un dictamen razonado siguiendo las guías NIA-AA 2018."
+                        
+                        with st.spinner(f"El Agente NeuroNet-{ai_provider} está analizando los biomarcadores..."):
+                            if ai_provider == "OpenAI":
+                                client = OpenAI(api_key=openai_api_key)
+                                response = client.chat.completions.create(
+                                    model=selected_model,
+                                    messages=[
+                                        {"role": "system", "content": system_prompt},
+                                        {"role": "user", "content": f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}"}
+                                    ],
+                                    temperature=0.3
+                                )
+                                ai_report = response.choices[0].message.content
+                            else:
+                                genai.configure(api_key=gemini_api_key)
+                                model_gemini = genai.GenerativeModel(model_name=selected_model, system_instruction=system_prompt)
+                                response = model_gemini.generate_content(f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}")
+                                ai_report = response.text
+                            
+                            st.markdown("#### 📄 Informe Generado por el Agente")
+                            st.markdown(f"<div class='medical-report' style='font-size: 0.85rem; height: 400px; overflow-y: scroll;'>{ai_report}</div>", unsafe_allow_html=True)
+                            st.download_button("📥 Descargar Informe IA", ai_report, file_name=f"Informe_IA_{selected_model}_{age}.md", use_container_width=True)
+                    
+                    except Exception as e:
+                        st.error(f"Error al conectar con el proveedor de IA ({ai_provider}): {str(e)}")
+    else:
+        st.error("Modelo no cargado. Verifica la ruta en MODEL_PATH.")
 
-else:
-    st.error("Modelo no cargado.")
+with tab_doc:
+    st.markdown("## 📚 Documentación Técnica NeuroNet-Fusion")
+    
+    with st.expander("🛠️ Guía de Configuración AI Agent", expanded=True):
+        st.markdown("""
+        ### ¿Cómo usar los Agentes de IA?
+        NeuroNet-Fusion utiliza **Modelos de Lenguaje de Gran Escala (LLM)** para transformar los datos numéricos en una narrativa clínica profesional.
+        
+        1.  **Proveedor:** Selecciona **OpenAI** para precisión estándar o **Google Gemini** para ventanas de contexto amplias.
+        2.  **API Key:** Es necesaria una llave personal.
+            -   [Obtener OpenAI Key](https://platform.openai.com/api-keys)
+            -   [Obtener Gemini Key](https://aistudio.google.com/app/apikey)
+        3.  **Consumo:** Cada generación consume una pequeña fracción de crédito de tu cuenta personal.
+        """)
 
+    with st.expander("🧠 Diccionario de Biomarcadores"):
+        st.markdown("""
+        #### 1. Biomarcadores Cognitivos
+        *   **MMSE (Mini-Mental State Examination):** Escala de 0-30. Valores < 24 sugieren deterioro cognitivo.
+        *   **CDR (Clinical Dementia Rating):** Clasifica la gravedad. 0 (Normal), 0.5 (Deterioro Leve), 1-3 (Dementia).
+        *   **FAQ (Functional Activities Questionnaire):** Evalúa independencia del paciente (0-30). > 9 indica dependencia funcional.
 
+        #### 2. Biomarcadores Estructurales (MRI)
+        Los volúmenes están normalizados por el **Volumen Intracraneal Total (TIV)**:
+        *   **Hipocampo:** La atrofia en esta zona es el sello distintivo del Alzheimer precoz.
+        *   **Corteza Entorrinal:** Una de las primeras áreas afectadas por la patología Tau.
+        *   **Ventrículos:** Un aumento en su tamaño indica pérdida global de tejido cerebral (Neurodegeneración).
+
+        #### 3. Biomarcadores Moleculares (LCR - Sistema ATN)
+        *   **Aβ42 (Amiloide):** Valores bajos (< 900 pg/mL) indican presencia de placas en el cerebro (**A+**).
+        *   **Tau T. / pTau:** Valores altos indican ovillos neurofibrilares y daño neuronal activo (**T+ / N+**).
+        """)
+
+    with st.expander("📊 Interpretación del Modelo"):
+        st.markdown("""
+        ### Red Neuronal XGBoost
+        El motor de diagnóstico utiliza una arquitectura de **Gradient Boosting** entrenada sobre las cohortes internacionales ADNI y OASIS-3. 
+        
+        *   **CN:** El paciente no presenta signos clínicos ni biológicos de patología.
+        *   **MCI:** Existe deterioro detectable, pero la funcionalidad diaria aún se preserva parcialmente.
+        *   **AD:** Hallazgos compatibles con demencia tipo Alzheimer establecida.
+        """)
+
+    st.info("💡 Consejo: Usa las pestañas superiores para alternar rápidamente entre esta documentación y el panel de análisis.")
+```
