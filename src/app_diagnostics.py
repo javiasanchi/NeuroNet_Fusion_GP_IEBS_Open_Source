@@ -100,8 +100,36 @@ def extract_from_text(text):
 
 st.sidebar.markdown("---")
 st.sidebar.markdown("**📚 Glosario y Documentación**")
-st.sidebar.info("ℹ️ Consulta la pestaña **📚 Documentación Técnica** (arriba) para ver el glosario completo de biomarcadores, la arquitectura del modelo y la guía del agente IA.")
+with st.sidebar:
+    import streamlit.components.v1 as components
+    components.html("""
+    <button onclick="
+        var tabs = window.parent.document.querySelectorAll('[data-baseweb=tab]');
+        for (var i = 0; i < tabs.length; i++) {
+            if (tabs[i].innerText.trim().includes('Documentaci')) {
+                tabs[i].click();
+                break;
+            }
+        }
+    " style="
+        width: 100%;
+        background: linear-gradient(135deg, #1a3a6b, #1e4d8c);
+        color: #58A6FF;
+        border: 1px solid #30363D;
+        border-radius: 8px;
+        padding: 9px 14px;
+        font-size: 0.84rem;
+        font-weight: 600;
+        cursor: pointer;
+        font-family: Inter, sans-serif;
+        letter-spacing: 0.02em;
+    " onmouseover="this.style.opacity='0.85'"
+       onmouseout="this.style.opacity='1'">
+        📚 Abrir Glosario y Documentación →
+    </button>
+    """, height=50)
 st.sidebar.markdown("---")
+
 
 # NLP Scanner en sidebar
 st.sidebar.markdown("**🔍 Escáner NLP de Informes**")
