@@ -10,3 +10,4 @@ streamlit
 pyreadr
 openai
 python-dotenv
+google-generativeai

@@ -8,6 +8,7 @@ from datetime import datetime
 import os
 import re
 from openai import OpenAI
+import google.generativeai as genai
 from dotenv import load_dotenv
 
 # Cargar variables de entorno (API Keys, Paths)
@@ -42,12 +43,22 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-# --- CONFIGURACIÓN DE AGENTE IA (OPENAI) ---
+# --- CONFIGURACIÓN DE AGENTE IA MULTIMODAL ---
 st.sidebar.markdown("### 🤖 Configuración AI Agent")
-# Intentar obtener la clave de las variables de entorno como valor por defecto
-env_api_key = os.getenv("OPENAI_API_KEY", "")
-openai_api_key = st.sidebar.text_input("OpenAI API Key", value=env_api_key, type="password", placeholder="sk-...")
-st.sidebar.info("Utilizamos GPT-4o-mini para lación agentica de informes clínicos siguiendo el Módulo 8 (NLP).")
+
+# Selector de Proveedor
+ai_provider = st.sidebar.selectbox("Proveedor de IA", ["OpenAI", "Google Gemini"], index=0)
+
+if ai_provider == "OpenAI":
+    env_api_key = os.getenv("OPENAI_API_KEY", "")
+    openai_api_key = st.sidebar.text_input("OpenAI API Key", value=env_api_key, type="password", placeholder="sk-...")
+    selected_model = st.sidebar.selectbox("Modelo", ["gpt-4o-mini", "gpt-4o", "gpt-3.5-turbo"], index=0)
+    st.sidebar.info("Utilizamos modelos de OpenAI para razonamiento clínico avanzado.")
+else:
+    env_gemini_key = os.getenv("GEMINI_API_KEY", "")
+    gemini_api_key = st.sidebar.text_input("Gemini API Key", value=env_gemini_key, type="password", placeholder="AIza...")
+    selected_model = st.sidebar.selectbox("Modelo", ["gemini-1.5-flash", "gemini-1.5-pro"], index=0)
+    st.sidebar.info("Google Gemini ofrece alto rendimiento con ventanas de contexto amplias.")
 
 # --- MOTOR DE EXTRACCIÓN NLP MEJORADO ---
 def extract_from_text(text):
@@ -323,16 +334,16 @@ if data_pkg:
                            file_name=f"Dictamen_NF_{age}.txt", use_container_width=True)
 
         # --- SECCIÓN AGENTICA (NLP MODULO 8) ---
-        st.divider()
-        st.markdown("### 🤖 Generación Agéntica de Informe (IA Avanzada)")
-        if st.button("✨ Generar Informe NeuroNet-IA (GPT-4o-mini)", use_container_width=True):
-            if not openai_api_key:
-                st.warning("Por favor, introduce tu OpenAI API Key en la barra lateral.")
+        st.markdown(f"### 🤖 Generación Agéntica con {ai_provider}")
+        if st.button(f"✨ Generar Informe con {selected_model}", use_container_width=True):
+            # Validación de llaves
+            current_key = openai_api_key if ai_provider == "OpenAI" else gemini_api_key
+            
+            if not current_key:
+                st.warning(f"Por favor, introduce tu API Key de {ai_provider} en la barra lateral.")
             else:
                 try:
-                    client = OpenAI(api_key=openai_api_key)
-                    
-                    # Consolidación de datos para el prompt
+                    # Datos comunes para el informe
                     contexto_paciente = f"""
                     DATOS DEL PACIENTE:
                     - Edad: {age} | Educación: {educat} años | APOE4: {'Portador' if apoe4==1 else 'No portador'}
@@ -342,23 +353,36 @@ if data_pkg:
                     - Diagnóstico Probabilístico del Modelo: {lbls[class_idx]} (Confianza: {probs[class_idx]*100:.1f}%)
                     """
                     
-                    with st.spinner("El Agente NeuroNet-IA está analizando los biomarcadores..."):
-                        response = client.chat.completions.create(
-                            model="gpt-4o-mini",
-                            messages=[
-                                {"role": "system", "content": "Eres un neurólogo experto en la Enfermedad de Alzheimer y diagnóstico multimodal. Tu tarea es elaborar un informe clínico altamente estructurado basado en los códigos del Módulo 8 (Procesamiento de Lenguaje Natural Clínico). Debes correlacionar los biomarcadores cognitivos, estructurales y moleculares (Sistema ATN) para dar un dictamen razonado siguiendo las guías NIA-AA 2018."},
-                                {"role": "user", "content": f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}"}
-                            ],
-                            temperature=0.3
-                        )
-                        ai_report = response.choices[0].message.content
+                    system_prompt = "Eres un neurólogo experto en la Enfermedad de Alzheimer y diagnóstico multimodal. Tu tarea es elaborar un informe clínico altamente estructurado basado en los códigos del Módulo 8 (Procesamiento de Lenguaje Natural Clínico). Debes correlacionar los biomarcadores cognitivos, estructurales y moleculares (Sistema ATN) para dar un dictamen razonado siguiendo las guías NIA-AA 2018."
+                    
+                    with st.spinner(f"El Agente NeuroNet-{ai_provider} está analizando los biomarcadores..."):
+                        if ai_provider == "OpenAI":
+                            client = OpenAI(api_key=openai_api_key)
+                            response = client.chat.completions.create(
+                                model=selected_model,
+                                messages=[
+                                    {"role": "system", "content": system_prompt},
+                                    {"role": "user", "content": f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}"}
+                                ],
+                                temperature=0.3
+                            )
+                            ai_report = response.choices[0].message.content
+                        else:
+                            # Integración con Google Gemini
+                            genai.configure(api_key=gemini_api_key)
+                            model_gemini = genai.GenerativeModel(
+                                model_name=selected_model,
+                                system_instruction=system_prompt
+                            )
+                            response = model_gemini.generate_content(f"Genera un informe detallado para el siguiente perfil de paciente:\n{contexto_paciente}")
+                            ai_report = response.text
                         
                         st.markdown("#### 📄 Informe Generado por el Agente")
                         st.markdown(f"<div class='medical-report' style='font-size: 0.85rem; height: 400px; overflow-y: scroll;'>{ai_report}</div>", unsafe_allow_html=True)
-                        st.download_button("📥 Descargar Informe IA", ai_report, file_name=f"Mantenimiento_IA_NF_{age}.md", use_container_width=True)
+                        st.download_button("📥 Descargar Informe IA", ai_report, file_name=f"Informe_IA_{selected_model}_{age}.md", use_container_width=True)
                 
                 except Exception as e:
-                    st.error(f"Error al conectar con OpenAI: {str(e)}")
+                    st.error(f"Error al conectar con el proveedor de IA ({ai_provider}): {str(e)}")
 
 else:
     st.error("Modelo no cargado.")
