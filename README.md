@@ -48,7 +48,7 @@ Basado en el marco de investigación **NIA-AA 2018 (Sistema ATN)**, el sistema a
 
 El sistema ha sido diseñado bajo una arquitectura de microservicios ligera que permite su integración en entornos hospitalarios (EHR) sin necesidad de infraestructura de computación GPU pesada:
 
-![Diagrama de Arquitectura](reports/figures/arquitectura_sistema.jpg)
+![Diagrama de Arquitectura](reports/figures/grafico_10_4_arquitectura_final.png)
 
 ### Componentes Core:
 1.  **Frontend:** Streamlit con diseño ultra-compacto "Single Screen" para eficiencia clínica.
