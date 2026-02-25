@@ -1,0 +1,9 @@
+services:
+  neuronet-fusion:
+    build: .
+    container_name: neuronet_app
+    restart: always
+    ports:
+      - "8501:8501"
+    volumes:
+      - ./models:/app/models
