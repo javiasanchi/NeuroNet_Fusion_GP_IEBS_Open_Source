@@ -10,7 +10,8 @@ NeuroNet-Fusion documenta **dos niveles de explicabilidad** correspondientes a l
 
 | **Investigación** | Grad-CAM | CNN 2D (benchmarking) | Validación neuroanatómica del enfoque imagen |
 
-![[Tabla 13.1 — Niveles de Explicabilidad e Interpretabilidad]](../../reports/figures/tabla_13_1_niveles.jpg)
+![Tabla 13.1: Niveles de Explicabilidad e Interpretabilidad](../../reports/figures/tabla_13_1_niveles.jpg)
+*Tabla 13.1: Matriz descriptiva de las técnicas de interpretabilidad aplicadas, detallando el nivel de análisis (global/local) y el destinatario clínico.*
 
 > El modelo de producción (XGBoost tabular) **no usa Grad-CAM**. La sección 13.2 documenta Grad-CAM como resultado experimental sobre el modelo CNN que se evaluó en el benchmarking: su validación neuroanatómica refuerza la confianza en los biomarcadores volumétricos (Hipocampo/ICV, Entorrinal/ICV) que sí utiliza el modelo final como variables de entrada tabulares.
 
@@ -20,12 +21,14 @@ NeuroNet-Fusion documenta **dos niveles de explicabilidad** correspondientes a l
 
 > **Contexto:** Grad-CAM se aplicó sobre el modelo **NeuroNetFusion CNN 2D** (ResNet50 + DenseNet121) que fue entrenado y evaluado durante la fase de benchmarking comparativo. Aunque este modelo no fue seleccionado para producción, sus mapas de saliencia confirman que la red aprendió a detectar las mismas estructuras que los neurorólogos identifican manualmente, fundamentando la validez clínica de los biomarcadores volumétricos que sí alimentan el modelo final.
 
-![[Código 13.2.1 — Implementación de Grad-CAM en PyTorch (NeuroNetFusion)]](../../reports/figures/codigo_13_2_1_gradcam.jpg)
+![Código 13.1: Implementación de Grad-CAM en PyTorch](../../reports/figures/codigo_13_2_1_gradcam.jpg)
+*Código 13.1: Lógica técnica para la generación de mapas de saliencia Grad-CAM sobre el backbone convolucional de la arquitectura Dual-Backbone.*
 
 **Explicación técnica (13.2.1):**
 El código implementa el algoritmo **Gradient-weighted Class Activation Mapping**, seleccionando la última capa convolucional de la ResNet50 como capa objetivo. Al calcular el gradiente de la puntuación de la clase predicha respecto a las activaciones de esta capa, el sistema identifica qué neuronas tienen mayor influencia positiva en la decisión, generando una máscara de importancia espacial que se proyecta sobre la MRI original.
 
-![[Imagen 13.2.2 — Visualización Grad-CAM sobre MRI (CN vs MCI vs AD)]](../../reports/figures/gradcam_explainability.png)
+![Figura 13.1: Visualización Grad-CAM sobre MRI (CN vs MCI vs AD)](../../reports/figures/gradcam_explainability.png)
+*Figura 13.1: Ejemplo de mapa de calor Grad-CAM superpuesto sobre un corte de MRI, identificando la atrofia temporal como motor de la predicción diagnóstica.*
 
 **Explicación clínica (13.2.2):**
 La visualización resultante permite una inspección cualitativa inmediata. Mientras que en sujetos sanos las activaciones son difusas, en pacientes con EA se observa una concentración de "calor" (puntos rojos) en el área del hipocampo y el sistema límbico, permitiendo al neurólogo verificar que el diagnóstico de la IA se basa en la atrofia neuroanatómica esperada y no en artefactos de la imagen.
@@ -57,12 +60,14 @@ Los mapas Grad-CAM fueron validados cualitativamente comparando las regiones de 
 plt.savefig('reports/figures/shap_beeswarm_AD.png', dpi=150)
 ```
 
-![[Código 13.3.1 — Generación de SHAP Beeswarm Plot para XGBoost]](../../reports/figures/codigo_13_3_1_shap_beeswarm.jpg)
+![Código 13.2: Generación de SHAP Beeswarm Plot para XGBoost](../../reports/figures/codigo_13_3_1_shap_beeswarm.jpg)
+*Código 13.2: Implementación del análisis de importancia global mediante SHAP Beeswarm para la visualización de la distribución del impacto por biomarcador.*
 
 **Explicación técnica (13.3.1):**
 Se utiliza la implementación **TreeSHAP**, un algoritmo optimizado para modelos basados en árboles que permite calcular los **Valores SHAP (SHapley Additive exPlanations)** de forma exacta. El código genera una vista agregada (Beeswarm) donde cada punto representa a un paciente del conjunto de test. La posición en el eje X indica si el valor de un biomarcador aumentó o disminuyó la probabilidad de diagnóstico, mientras que el color representa el valor relativo del biomarcador (alto/bajo), permitiendo visualizar patrones globales de causalidad en toda la población estudiada.
 
-![[Gráfico 13.3.1 — SHAP Beeswarm: Impacto de Biomarcadores en Diagnóstico AD]](../../reports/figures/shap_beeswarm_AD.png)
+![Figura 13.2: SHAP Beeswarm - Impacto de Biomarcadores en Diagnóstico AD](../../reports/figures/shap_beeswarm_AD.png)
+*Figura 13.2: Distribución de los valores SHAP para la clase AD, mostrando el impacto positivo (pro-diagnóstico) y negativo de cada biomarcador clínico.*
 
 **Análisis de Hallazgos en Gráfico Beeswarm (Imagen 13.3.1):**
 
@@ -77,21 +82,24 @@ La visualización Beeswarm permite realizar una auditoría clínica de la lógic
 
 | Educación alta | ↓ P(AD) | Reserva cognitiva: años de educación actúan como factor protector |
 
-![[Tabla 13.3.1 — Resumen de Impacto de Biomarcadores según SHAP]](../../reports/figures/tabla_13_3_1_shap.jpg)
+![Tabla 13.2: Resumen de Impacto de Biomarcadores según SHAP](../../reports/figures/tabla_13_3_1_shap.jpg)
+*Tabla 13.2: Ranking consolidado de los biomarcadores con mayor peso discriminativo según el análisis de valores Shapley promediados sobre el set de test.*
 
 ### 13.3.2 SHAP Waterfall — Explicación Individual
 
     )
 ```
 
-![[Código 13.3.2 — Generación de SHAP Waterfall Plot (Diagnóstico Individual)]](../../reports/figures/codigo_13_3_2_shap_patient.jpg)
+![Código 13.3: Generación de SHAP Waterfall Plot](../../reports/figures/codigo_13_3_2_shap_patient.jpg)
+*Código 13.3: Lógica para la generación de explicaciones locales (paciente único) utilizando force plots de SHAP para detallar la lógica diagnóstica.*
 
 **Análisis de Caso Individual:**
 La visualización tipo **Waterfall** permite deconstruir la probabilidad final de un paciente. Partiendo del valor base (promedio de la población), cada biomarcador "empuja" la predicción hacia un diagnóstico u otro. En el ejemplo siguiente, el **MMSE** y la carga de **TAU** son los factores predominantes que confirman la transición a Alzheimer.
 
 **Ejemplo: Paciente AD con MMSE=18, TAU=580, Hipocampo=0.0031**
 
-![[Tabla 13.3.2 — Datos Clínicos de Paciente Ejemplo (Alzheimer)]](../../reports/figures/tabla_13_3_2_ejemplo_paciente.jpg)
+![Tabla 13.3: Datos Clínicos de Paciente Ejemplo (Alzheimer)](../../reports/figures/tabla_13_3_2_ejemplo_paciente.jpg)
+*Tabla 13.3: Desglose de la contribución de cada variable a la probabilidad de diagnóstico para un caso clínico real, facilitando la auditoría médica.*
 
 ```
 SHAP Waterfall — Diagnóstico: Alzheimer Establecido (P=91.4%)
@@ -117,7 +125,8 @@ La aplicación Streamlit muestra automáticamente una interpretación narrative 
     narrative += get_clinical_explanation(feat, val)
 ```
 
-![[Código 13.4 — Motor de Generación de Narrativa Clínica Streamlit]](../../reports/figures/codigo_13_4_narrativa.jpg)
+![Código 13.4: Motor de Generación de Narrativa Clínica Streamlit](../../reports/figures/codigo_13_4_narrativa.jpg)
+*Código 13.4: Algoritmo de traducción de valores SHAP a narrativa clínica estructurada para el informe neurológico final.*
 
 **Explicación técnica (13.4):**
 La implementación en la interfaz de usuario automatiza la traducción de los valores SHAP a lenguaje natural médico. El motor identifica los tres biomarcadores con mayor peso absoluto en la decisión actual (ya sea a favor o en contra del diagnóstico), determina su dirección (elevado/reducido) y consulta una base de conocimientos clínicos para generar una observación descriptiva. Este nivel de **interpretabilidad activa** permite que el informe final no solo entregue una probabilidad, sino también una justificación razonada de los hallazgos patológicos detectados.
@@ -130,4 +139,5 @@ La validación cruzada entre las predicciones del modelo y los criterios diagnó
 
 | Educación = reserva cognitiva | Efecto negativo en P(AD) | ✅ 100% |
 
-![[Tabla 13.5 — Validación de Concordancia con Criterios SEN]](../../reports/figures/tabla_13_5_sen.jpg)
+![Tabla 13.4: Validación de Concordancia con Criterios SEN](../../reports/figures/tabla_13_5_sen.jpg)
+*Tabla 13.4: Matriz de correspondencia entre el dictamen estructurado de NeuroNet-Fusion y los estándares de reporte de la Sociedad Española de Neurología.*

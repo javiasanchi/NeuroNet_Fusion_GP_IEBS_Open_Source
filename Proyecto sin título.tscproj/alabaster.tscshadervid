@@ -1,0 +1,57 @@
+{
+    "code":  "\nuniform vec4 _Color0;\nuniform vec4 _Color1;\nuniform vec4 _Color2;\nuniform vec4 _Color3;\nuniform float _MidPointX;\nuniform float _MidPointY;\nuniform float _Speed;\n\nvoid main( void )\n{\n    float bx = log(.5)/log(_MidPointX);\n    float by = log(.5)/log(_MidPointY);\n\n    float c = sin(_Speed/8.*_Time)*2.;\n    float offx = sin(_Speed*_Time/6.+_TexCoord.x*c)/5.+sin(_Speed*_Time/5.+_TexCoord.y*c)/5.; \n    float offy = sin(_Speed*_Time/5.+_TexCoord.x*c)/5.+sin(_Speed*_Time/6.+_TexCoord.y*c)/5.; \n    vec4 col1 = mix(_Color0, _Color1, clamp(pow(_TexCoord.x, bx)+offx, 0., 1.));\n    vec4 col2 = mix(_Color2, _Color3, clamp(pow(_TexCoord.x, bx)+offx, 0., 1.));\n    _FragColor = mix(col1, col2, clamp(pow(_TexCoord.y, by)+offy, 0., 1.));\n}\n",
+    "copyright":  "Copyright © 2023 TechSmith Corporation. All rights reserved.",
+  "effectDef": [
+    {
+      "name": "Color0",
+      "type": "Color",
+      "value": "ffffff"
+    },
+    {
+      "name": "Color1",
+      "type": "Color",
+      "value": "ebe6e5"
+    },
+    {
+      "name": "Color2",
+      "type": "Color",
+      "value": "dddfe0"
+    },
+    {
+      "name": "Color3",
+      "type": "Color",
+      "value": "e1e0e0"
+    },
+    {
+      "defaultValue": 0.5,
+      "maxValue": 0.9,
+      "minValue": 0.1,
+      "name": "MidPointX",
+      "type": "double",
+      "unitType": "percentage"
+    },
+    {
+      "defaultValue": 0.5,
+      "maxValue": 0.9,
+      "minValue": 0.1,
+      "name": "MidPointY",
+      "type": "double",
+      "unitType": "percentage"
+    },
+    {
+      "defaultValue": 0.2,
+      "maxValue": 10,
+      "minValue": 0,
+      "name": "Speed",
+      "type": "double"
+    }
+  ],
+  "name": "Alabaster",
+    "height":  1080,
+    "signature":  {
+                      "type":  "ES512",
+                      "value":  "MIGIAkIB9Qqk6/OFMOeKT24Q1WpZyGNEj9BQBKIPucmGZuMTYDMDdNDGrs2Z6MicMalWMrOLO4stZRvn3E9FRYpffAZO4/sCQgEoO5MCKfuVWKSYCfaZUaggHuLpevu8TUJD+KrRVzqW+I/d18NKD/rJ0wZH0kTj5PzNIvel1fVRy8x4JXNdQXkr4Q=="
+                  },
+    "version":  1.0,
+    "width":  1920
+}

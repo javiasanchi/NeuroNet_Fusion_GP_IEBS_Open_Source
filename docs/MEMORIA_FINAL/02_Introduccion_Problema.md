@@ -6,32 +6,21 @@
 
 La enfermedad de Alzheimer (EA) es un trastorno neurodegenerativo crónico de etiología multifactorial que destruye progresiva e irreversiblemente las neuronas del sistema nervioso central. Representa entre el **60% y el 80%** de todos los casos de demencia a nivel mundial (Alzheimer's Association, 2024) y es la **séptima causa de muerte** en los países desarrollados.
 
-Los datos epidemiológicos globales son alarmantes:
+Los datos epidemiológicos globales son alarmantes y dibujan un escenario de crisis de salud pública inminente:
 
-| Indicador | Cifra Global (2024) |
-|:---|:---|
-| Personas con demencia en el mundo | 55 millones |
-| Nuevos casos anuales | 10 millones |
-| Coste económico global | 1,3 billones de USD |
-| Pacientes sin diagnóstico formal | ~75% en países de renta media-baja |
-| Proyección de prevalencia (2050) | 139 millones |
-
-*Fuente: World Alzheimer Report 2024, Alzheimer's Disease International.*
+![Tabla 2.1: Impacto Epidemiológico Global Alzheimer](../../reports/figures/tabla_2_1_epidemiologia.png)
+*Tabla 2.1: Resumen de los principales indicadores epidemiológicos y proyecciones sobre la evolución de la enfermedad de Alzheimer a nivel global (Fuente: OMS 2023 / World Alzheimer Report).*
 
 ---
 
 ## 2.2 El Desafío del Diagnóstico Precoz
 
-La fisiopatología de la EA sigue una **cascada temporal** bien definida que precede en **15-20 años** a los síntomas clínicos visibles:
+La fisiopatología de la EA sigue una **cascada temporal** silenciosa que precede en décadas a la aparición de los primeros síntomas clínicos. El problema central es la "ventana de invisibilidad" en la que el cerebro ya está sufriendo daños irreversibles pero la clínica habitual no detecta nada:
 
-```
-[Fase Preclínica]          [Fase Prodrómica]       [Fase Demencia]
-  ↓ Aβ42 en LCR           MCI (Deterioro          Alzheimer
-  ↑ pTau en LCR           Cognitivo Leve)         Establecido
-  Atrofia hipocampal
-  
-< -15 años               -5 a -2 años           Diagnóstico actual
-```
+![Tabla 2.2: Cascada Temporal y Ventana de Detección](../../reports/figures/tabla_2_2_cascada.png)
+*Tabla 2.2: Evolución clínica frente a los marcadores biológicos (cascada amiloide y neurodegeneración) a lo largo de las fases asintomática, prodrómica y de demencia establecida.*
+
+> 🚩 **El fallo del sistema actual:** La mayoría de los diagnósticos se realizan en el "Día 0", cuando el **50-70% de las neuronas** de regiones críticas ya han perecido. NeuroNet-Fusion busca capturar al paciente en la fase de -10 años.
 
 El problema central es que el **diagnóstico convencional** ocurre en la fase de demencia establecida, cuando la pérdida neuronal es irreversible. Los métodos tradicionales dependen de:
 
@@ -43,25 +32,17 @@ El problema central es que el **diagnóstico convencional** ocurre en la fase de
 
 ## 2.3 La Brecha Tecnológica
 
-Los modelos de IA previos para el diagnóstico de Alzheimer presentan **tres limitaciones críticas**:
+Las aproximaciones actuales mediante IA presentan **tres limitaciones críticas** que impiden su adopción masiva en la toma de decisiones médicas:
 
-| Limitación | Descripción |
-|:---|:---|
-| **Unimodalidad** | Solo analizan imagen MRI o solo datos clínicos, perdiendo la correlación entre ambos. |
-| **2D vs. 3D** | Los modelos 2D analizan cortes aislados, perdiendo la continuidad espacial del hipocampo. |
-| **Caja Negra** | Sin explicabilidad, los médicos no pueden validar ni confiar en la predicción. |
+![Tabla 2.3: Brecha Tecnológica](../../reports/figures/tabla_2_3_brecha.png)
+*Tabla 2.3: Principales limitaciones tecnológicas de los modelos convencionales de IA y sus correspondientes consecuencias y barreras para la adopción en la práctica neurológica real.*
 
 ---
 
-## 2.4 La Propuesta NeuroNet-Fusion
+Frente a estas limitaciones, **NeuroNet-Fusion** se fundamenta en un paradigma de **Inteligencia Artificial Médica Explicable (XAI)**, aportando las siguientes innovaciones:
 
-Frente a estas limitaciones, **NeuroNet-Fusion** se diseña con tres innovaciones centrales:
-
-1. **Fusión Multimodal Profunda:** La red integra la información de imagen (ResNet50/3D-ResNet) con 14 biomarcadores clínicos (rama MLP), generando un diagnóstico contextualmente enriquecido que ninguna fuente podría producir de forma aislada.
-
-2. **Procesamiento Volumétrico 3D:** Las MRI se procesan como volúmenes completos (128×128×128 voxels), preservando la continuidad anatómica de estructuras críticas como el hipocampo, la corteza entorrinal y el lóbulo temporal medial.
-
-3. **Explicabilidad Integrada:** El sistema genera mapas de calor Grad-CAM que muestran *dónde* mira el modelo y análisis SHAP que revelan *qué biomarcadores* determinan el diagnóstico, convirtiendo la IA en una "segunda opinión razonada" para el neurólogo.
+![Tabla 2.4: Innovaciones NeuroNet](../../reports/figures/tabla_2_4_innovaciones.png)
+*Tabla 2.4: Pilares fundamentales de la propuesta de NeuroNet-Fusion, diseñados específicamente para superar la brecha tecnológica mediante fusión multimodal, predicción preclínica y explicabilidad SHAP.*
 
 ---
 

@@ -27,7 +27,8 @@ El proyecto integra tres fuentes de datos complementarias, todas de acceso acad�
 
 **OASIS-3** es un proyecto de datos abiertos mantenido por la Universidad de Washington (Knight ADRC). Proporciona datos clínicos longitudinales, evaluaciones neuropsicológicas, biomarcadores de LCR y medidas de volumetría cerebral derivadas de MRI en 1.098 sujetos con seguimiento de hasta 30 años. Al igual que con ADNI, se consumen las **tablas CSV de volumetría y escalas clínicas**, no las imágenes.
  
-![[Tabla 6.1.2 — Inventario de Datos y Biomarcadores OASIS-3]](../../reports/figures/tabla_6_1_2_oasis3.jpg)
+![Tabla 6.1: Inventario de Datos y Biomarcadores OASIS-3](../../reports/figures/tabla_6_1_2_oasis3.jpg)
+*Tabla 6.1: Inventario técnico de las modalidades de datos disponibles en la cohorte OASIS-3, incluyendo el número de sujetos y la disponibilidad de volumetría longitudinal y biomarcadores del LCR.*
 
 **Resumen comparativo de las fuentes:**
 
@@ -44,7 +45,8 @@ El proyecto integra tres fuentes de datos complementarias, todas de acceso acad�
 
 Tras el proceso de curación, limpieza y unificación de las tablas CSV de ADNI y OASIS-3:
  
-![[Tabla 6.2 — Inventario Final y Distribución de Clases del Dataset Maestro]](../../reports/figures/tabla_6_2_estadisticas_maestro.jpg)
+![Tabla 6.2: Inventario Final y Distribución de Clases del Dataset Maestro](../../reports/figures/tabla_6_2_estadisticas_maestro.jpg)
+*Tabla 6.2: Estadísticas del dataset maestro unificado (ADNI + OASIS-3), detallando el volumen total de registros (11.606) y el balance porcentual entre las clases diagnósticas.*
 
 > **Nota estadística:** El dataset presenta un **balance excepcional** entre las tres clases (~33% cada una), característica poco habitual en estudios clínicos y que elimina la necesidad de técnicas de oversampling (SMOTE) o ajuste de pesos de clase que podrían introducir sesgos artificiales.
 
@@ -70,7 +72,8 @@ print(resumen)
 
 **Resultados del EDA — estadísticas por clase:**
 
-![[Tabla 6.3 — Estadísticas Descriptivas de Biomarcadores por Estadio Diagnóstico]](../../reports/figures/tabla_6_3_eda_stats.jpg)
+![Tabla 6.3: Estadísticas Descriptivas de Biomarcadores por Estadio Diagnóstico](../../reports/figures/tabla_6_3_eda_stats.jpg)
+*Tabla 6.3: Análisis estadístico descriptivo (media, mediana y desviación estándar) de los principales biomarcadores para cada uno de los tres estadios clínicos evaluados.*
 
 *Todos los marcadores muestran diferencias estadísticamente significativas entre clases (p<0.001), validando su poder discriminativo.*
 
@@ -102,7 +105,8 @@ corr_matrix = df[corr_vars].corr()
 
 ### Valores Faltantes en las Variables Tabulares
 
-![[Tabla 6.4 — Análisis de Valores Faltantes y Estrategias de Imputación]](../../reports/figures/tabla_6_4_missing_values.jpg)
+![Tabla 6.4: Análisis de Valores Faltantes y Estrategias de Imputación](../../reports/figures/tabla_6_4_missing_values.jpg)
+*Tabla 6.4: Auditoría de calidad de datos, mostrando el porcentaje de valores faltantes por columna y la justificación técnica de la estrategia de imputación estratificada.*
 
 > La alta tasa de missing en TAU/ABETA (18.7%) es esperable en un dataset de cohorte real: no todos los pacientes tienen punción lumbar disponible. La volumetría hipocampal (5.1% missing) se debe a estudios donde FreeSurfer no convergió por artefactos en la adquisición MRI original. En ambos casos, el modelo final fue entrenado con imputación por mediana para maximizar el uso de los datos disponibles.
 

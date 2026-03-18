@@ -19,7 +19,8 @@ Un modelo de Machine Learning no tiene impacto clínico real hasta que es **acce
 └── Módulo 6: Dictamen Clínico ATN (expander + descarga)
 ```
 
-![[Tabla 14.2 — Módulos de la Arquitectura del Sistema NeuroNet-Fusion]](../../reports/figures/tabla_14_2_arquitectura.jpg)
+![Tabla 14.1: Módulos de la Arquitectura del Sistema NeuroNet-Fusion](../../reports/figures/tabla_14_2_arquitectura.jpg)
+*Tabla 14.1: Desglose modular de la plataforma de diagnóstico, detallando la separación entre la capa de presentación (Streamlit), lógica de negocio y motor de inferencia.*
 
 **Análisis de la Arquitectura:**
 El diseño modular permite una separación clara entre la lógica de negocio (el modelo de ML) y la interfaz de usuario. Esta estructura facilita el mantenimiento del CDSS y permite actualizaciones independientes del modelo sin afectar la experiencia del usuario. El uso de **Streamlit** como framework permite un desarrollo ágil de Tablas de Mando interactivas con capacidad de respuesta en tiempo real.
@@ -35,7 +36,8 @@ La materialización de la arquitectura descrita se traduce en una interfaz de **
 3.  **Panel de Cuadrantes:** Disposición simétrica de los 14 biomarcadores clasificados por dominios (Cognitivo, Demográfico, Estructural y Molecular).
 4.  **Consola de Resultados:** Visualización inmediata del diagnóstico IA con su correspondiente confianza estadística y representación gráfica polar (Radar) para la detección de perfiles atípicos.
 
-![[Imagen 14.3 — Vista General del Dashboard NeuroNet-Fusion: Integración Multimodal en Tiempo Real]](../../reports/figures/app_14_0_vista_general.jpg)
+![Figura 14.1: Vista General del Dashboard NeuroNet-Fusion](../../reports/figures/app_14_0_vista_general.jpg)
+*Figura 14.1: Interfaz de usuario de la aplicación final, integrando paneles de entrada de biomarcadores, visualizaciones en tiempo real y dictamen estructurado.*
 
 **Filosofía de Diseño:**
 Se ha priorizado un tema de alto contraste (Dark Mode) para reducir la fatiga visual y destacar los indicadores críticos (semáforo diagnóstico). La interactividad de todos los elementos permite al clínico realizar análisis de tipo *What-if*, observando cómo variaciones mínimas en biomarcadores específicos (ej. un ligero descenso en el volumen hipocampal) impactan en el riesgo global de conversión a Alzheimer.
@@ -84,7 +86,8 @@ lbls = ['🟢 Cognitivamente Normal (CN)',
 clrs = ['#28a745', '#ffc107', '#dc3545']
 ```
 
-![[Código 14.3 — Configuración Global y Estilo CSS del Dashboard]](../../reports/figures/codigo_14_3_streamlit_config.jpg)
+![Código 14.1: Configuración Global y Estilo CSS del Dashboard](../../reports/figures/codigo_14_3_streamlit_config.jpg)
+*Código 14.1: Inicialización del framework Streamlit y aplicación de estilos CSS personalizados para garantizar una estética clínica de alto contraste (Dark Mode).*
 
 **Gestión de Estilo y Rendimiento:**
 La aplicación utiliza un tema oscuro personalizado para reducir la fatiga visual del profesional durante la consulta. La directiva `@st.cache_resource` asegura que el modelo de 42MB se cargue únicamente una vez en memoria, optimizando la velocidad de respuesta en cada predicción.
@@ -116,12 +119,14 @@ with c3:
     ptau  = st.number_input("pTAU pg/mL", 0, 300, 28)
 ```
 
-![[Código 14.3.1 — Panel de Entrada Multicolumna: Síntesis de Biomarcadores]](../../reports/figures/codigo_14_3_1_panel.jpg)
+![Código 14.2: Panel de Entrada Multicolumna](../../reports/figures/codigo_14_3_1_panel.jpg)
+*Código 14.2: Implementación de la captura de biomarcadores organizada por dominios clínicos (Cognitivo, Demográfico, MRI y LCR) mediante widgets interactivos.*
 
 **Diseño Basado en Evidencia:**
 La agrupación de variables en cuatro bloques (Cognitivo, Demografía, MRI y LCR) corresponde directamente con la estructura de recogida de datos en centros de excelencia como **ADNI**. Este diseño facilita la transferencia de datos desde la historia clínica electrónica al motor de inferencia.
 
-![[Código 14.3.2 — Motor de Inferencia: Procesamiento de Entrada y Predicción]](../../reports/figures/codigo_14_3_2_inference.jpg)
+![Código 14.3: Motor de Inferencia: Procesamiento y Predicción](../../reports/figures/codigo_14_3_2_inference.jpg)
+*Código 14.3: Lógica de vectorización de datos del usuario y ejecución del modelo XGBoost para la obtención de probabilidades diagnósticas multiclase.*
 
 **Explicación técnica (14.3.2):**
 El **motor de inferencia** actúa como el núcleo lógico de la aplicación. Su función es vectorizar en tiempo real los 14 biomarcadores introducidos por el usuario para conformar una estructura compatible con el modelo XGBoost optimizado. Al ejecutar `predict_proba`, el sistema no solo devuelve la clase más probable, sino una distribución de confianza multiclase, lo que permite al clínico evaluar no solo el diagnóstico final, sino también la incertidumbre asociada a la decisión del modelo.
@@ -132,14 +137,16 @@ El **motor de inferencia** actúa como el núcleo lógico de la aplicación. Su 
 
 ### 14.4.1 Medidor de Confianza (Gauge Chart)
 
-![[Código 14.4.1 — Implementación de Dashboard Plotly (Gauge Chart)]](../../reports/figures/codigo_14_4_1_gauge.jpg)
+![Código 14.4: Implementación de Dashboard Plotly (Gauge Chart)](../../reports/figures/codigo_14_4_1_gauge.jpg)
+*Código 14.4: Implementación técnica del medidor de confianza diagnóstica utilizando la librería Plotly para una visualización dinámica de la probabilidad.*
 
 **Explicación técnica (14.4.1):**
 El **Gauge Chart** (gráfico de medidor) proporciona una métrica visual inmediata de la certeza del modelo. Se ha configurado para cambiar de color dinámicamente según la clase predicha (verde, amarillo o rojo) y utiliza un fondo degradado que indica los umbrales de confianza. La inclusión de un `threshold` en el 85% actúa como un indicador visual de alta fiabilidad, permitiendo al clínico distinguir rápidamente entre predicciones limítrofes y diagnósticos de alta certidumbre.
 
 ### 14.4.2 Radar de Biomarcadores ATN
 
-![[Código 14.4.2 — Implementación de Dashboard Plotly (Radar Chart)]](../../reports/figures/codigo_14_4_2_radar.jpg)
+![Código 14.5: Implementación de Dashboard Plotly (Radar Chart)](../../reports/figures/codigo_14_4_2_radar.jpg)
+*Código 14.5: Configuración del gráfico radar para la visualización holística del perfil de biomarcadores del paciente en comparación con el promedio poblacional.*
 
 **Explicación técnica (14.4.2):**
 El **Radar Plot** permite visualizar el perfil multidimensional del paciente de forma holística. Cada eje representa un biomarcador clave normalizado (MMSE, CDR, Hipocampo, etc.). Esta representación facilita el reconocimiento de patrones patológicos de forma visual (como la forma del polígono resultante), permitiendo al neurólogo identificar rápidamente qué dimensiones cognitivas o biológicas están más afectadas y cómo contribuyen a la probabilidad final.
@@ -170,7 +177,8 @@ func_impact = ("ALTO"       if bc_faq > 15 else
               'estable / sin marcadores patológicos')
 ```
 
-![[Código 14.5 — Lógica de Clasificación ATN y Generación de Dictamen]](../../reports/figures/codigo_14_5_atn.jpg)
+![Código 14.6: Lógica de Clasificación ATN y Generación de Dictamen](../../reports/figures/codigo_14_5_atn.jpg)
+*Código 14.6: Motor de reglas deterministas para la clasificación biológica del paciente según el marco ATN-NIA-AA basado en los cut-offs clínicos.*
 
 **Estandarización Internacional:**
 Siguiendo las guías **NIA-AA 2018**, el sistema clasifica automáticamente el perfil del paciente en el espacio **ATN**. Esto garantiza que el lenguaje del informe generado sea interoperable con el resto del ecosistema de investigación y práctica clínica internacional.
@@ -200,7 +208,8 @@ ensayo terapéutico anti-amiloide si elegible (MMSE 18-26).
 IEBS Business School — Proyecto Final Postgrado IA 2026
 ```
 
-![[Imagen 14.5 — Ejemplo de Informe Neurológico Digital Generado por el CDSS]](../../reports/figures/informe_ejemplo_final.jpg)
+![Figura 14.2: Ejemplo de Informe Neurológico Digital Generado](../../reports/figures/informe_ejemplo_final.jpg)
+*Figura 14.2: Estructura del dictamen clínico descargable en formato .txt, consolidando datos, diagnósticos y recomendaciones neurológicas personalizadas.*
 
 ---
 
@@ -218,13 +227,15 @@ python -m streamlit run app_diagnostics.py
 #                 Python: 3.12
 ```
 
-![[Código 14.6 — Comandos de Instalación, ejecución y despliegue]](../../reports/figures/codigo_14_6_bash.jpg)
+![Código 14.7: Comandos de Instalación y Despliegue](../../reports/figures/codigo_14_6_bash.jpg)
+*Código 14.7: Instrucciones de terminal para la configuración del entorno virtual y la ejecución de la plataforma Streamlit en un servidor local.*
 
 ---
 
 **Variables de entorno requeridas:**
 
-![[Imagen 14.6 — Configuración de Variables de Entorno para la Inferencia Local]](../../reports/figures/codigo_14_6_env.jpg)
+![Código 14.8: Configuración de Variables de Entorno](../../reports/figures/codigo_14_6_env.jpg)
+*Código 14.8: Plantilla de configuración del archivo .env para la autenticación de APIs externas y especificación de rutas de modelos en producción.*
 
 ---
 
@@ -237,7 +248,8 @@ Como innovación en el marco del **Módulo 8 (Procesamiento de Lenguaje Natural)
 - **Narrativa Ética:** Traduce las probabilidades técnicas en una narrativa humana y profesional, siguiendo estrictamente las guías de la Sociedad Española de Neurología (SEN).
 - **Interoperabilidad:** El informe generado está listo para ser integrado en la historia clínica del paciente.
 
-![[Código 14.7 — Implementación del Agente Clínico Basado en GPT-4o-mini]](../../reports/figures/codigo_14_7_agent.jpg)
+![Código 14.9: Implementación del Agente Clínico (GPT-4o-mini)](../../reports/figures/codigo_14_7_agent.jpg)
+*Código 14.9: Integración del modelo fundacional para la generación de narrativa médica avanzada y el razonamiento sobre el cuadro clínico global.*
 
 **Evolución del Módulo 8:**
 Aunque el módulo de NLP se encuentra en fase de refinamiento, su integración en el CDSS demuestra el potencial de la **IA Generativa Agéntica** para reducir la carga administrativa del facultativo y mejorar la comunicación diagnóstica con el paciente.

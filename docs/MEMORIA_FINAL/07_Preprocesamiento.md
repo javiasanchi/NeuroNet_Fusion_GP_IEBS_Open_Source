@@ -33,7 +33,8 @@ def convert_series_to_nifti(dicom_dir: str, output_path: str):
         print(f"[ERROR] {dicom_dir}: {e}")
 ```
 
-![[Código 7.1 Paso 1 — Conversión DICOM a NIfTI]](../../reports/figures/codigo_7_paso1_dicom_nifti.png)
+![Código 7.1.1: Conversión DICOM a NIfTI](../../reports/figures/codigo_7_paso1_dicom_nifti.png)
+*Código 7.1.1: Implementación técnica del Paso 1: Conversión automatizada de series de cortes DICOM a volúmenes unificados en formato NIfTI comprimido (.nii.gz).*
 
 **Resultado:** 135 volúmenes T1-weighted convertidos correctamente (tasa de éxito 100%).  
 **Tamaño medio por volumen NIfTI:** ~280 MB (sin comprimir) → ~45 MB (.nii.gz).
@@ -53,7 +54,8 @@ def reorient_to_ras(nifti_path: str) -> nib.Nifti1Image:
     return ras_img
 ```
 
-![[Código 7.1 Paso 2 — Reorientación Anatómica RAS]](../../reports/figures/codigo_7_paso2_reorientacion_ras.png)
+![Código 7.1.2: Reorientación Anatómica RAS](../../reports/figures/codigo_7_paso2_reorientacion_ras.png)
+*Código 7.1.2: Implementación técnica del Paso 2: Reorientación canónica al espacio RAS para asegurar la coherencia anatómica entre diferentes planos de adquisición.*
 
 ### Paso 3 — Normalización de Intensidad Z-Score
 
@@ -78,7 +80,8 @@ def normalize_zscore(volume: np.ndarray) -> np.ndarray:
     return normalized
 ```
 
-![[Código 7.1 Paso 3 — Normalización de Intensidad Z-Score]](../../reports/figures/codigo_7_paso3_normalizacion_zscore.png)
+![Código 7.1.3: Normalización de Intensidad Z-Score](../../reports/figures/codigo_7_paso3_normalizacion_zscore.png)
+*Código 7.1.3: Implementación técnica del Paso 3: Normalización Z-score de intensidades voxel-wise calculada exclusivamente sobre la máscara de señal de tejido cerebral.*
 
 ### Paso 4 — Segmentación de Bounding Box
 
@@ -99,7 +102,8 @@ def crop_to_brain(volume: np.ndarray) -> np.ndarray:
     ]
 ```
 
-![[Código 7.1 Paso 4 — Segmentación de Bounding Box]](../../reports/figures/codigo_7_paso4_bounding_box.png)
+![Código 7.1.4: Segmentación de Bounding Box](../../reports/figures/codigo_7_paso4_bounding_box.png)
+*Código 7.1.4: Implementación técnica del Paso 4: Algoritmo de recorte dinámico (cropping) para eliminar el fondo nulo y centrar el campo de visión en el parénquima.*
 
 ### Paso 5 — Redimensionado Uniforme (128×128×128)
 
@@ -112,7 +116,8 @@ def resize_volume(volume: np.ndarray, target=(128, 128, 128)) -> np.ndarray:
     return zoom(volume, factors, order=1)  # Interpolación bilineal
 ```
 
-![[Código 7.1 Paso 5 — Redimensionado Uniforme 128x128x128]](../../reports/figures/codigo_7_paso5_resize_128.png)
+![Código 7.1.5: Redimensionado Uniforme 128x128x128](../../reports/figures/codigo_7_paso5_resize_128.png)
+*Código 7.1.5: Implementación técnica del Paso 5: Redimensionado mediante interpolación bilineal para estandarizar la resolución de entrada de las redes 3D.*
 
 ---
 
@@ -120,7 +125,8 @@ def resize_volume(volume: np.ndarray, target=(128, 128, 128)) -> np.ndarray:
 
 ### 7.2.1 Inventario de Variables
 
-![[Tabla 7.2.1 — Inventario de Biomarcadores y Rangos Clínicos]](../../reports/figures/tabla_7_2_1_inventario.jpg)
+![Tabla 7.1: Inventario de Biomarcadores y Rangos Clínicos](../../reports/figures/tabla_7_2_1_inventario.jpg)
+*Tabla 7.1: Inventario exhaustivo de las variables de entrada del modelo final, incluyendo su unidad de medida, rango clínico esperado y significación patológica.*
 
 ### 7.2.2 Tratamiento de Valores Faltantes
 
@@ -152,7 +158,8 @@ def impute_by_class(df: pd.DataFrame, target_col: str) -> pd.DataFrame:
     return df
 ```
 
-![[Código 7.2.2 — Estrategia de Imputación por Clase e Inclusión de Flags de Ausencia]](../../reports/figures/codigo_7_2_2_imputacion.png)
+![Código 7.2.1: Estrategia de Imputación por Clase e Inclusión de Flags](../../reports/figures/codigo_7_2_2_imputacion.png)
+*Código 7.2.1: Implementación de la estrategia de imputación por mediana estratificada por clase y generación de indicadores binarios de disponibilidad de biomarcadores.*
 
 **Justificación y Resultados:**
 1.  **Preservación de la Señal:** Al imputar por mediana de clase, nos aseguramos de que el modelo aprenda las distribuciones típicas de cada estadio. Imputar con la mediana global "limpiaría" artificialmente los datos, ocultando la patología.
@@ -205,7 +212,8 @@ def preprocess_tabular_features(X_train, y_train):
     return X_train, y_encoded, le
 ```
 
-![[Código 7.2.3 — Pipeline de Escalado, Normalización ICV y Codificación]](../../reports/figures/codigo_7_2_3_escalado_codificacion.png)
+![Código 7.2.2: Pipeline de Escalado, Normalización ICV y Codificación](../../reports/figures/codigo_7_2_3_escalado_codificacion.png)
+*Código 7.2.2: Función principal de preprocesamiento tabular, integrando la normalización biológica (ICV), el escalado estadístico y la codificación de etiquetas diagnósticas.*
 
 **Explicación Técnica:**
 - **StandardScaler:** Transforma las variables para que tengan media 0 y desviación estándar 1. Esto es vital para que biomarcadores con escalas muy diferentes (ej. MMSE de 0-30 vs. ABETA de 200-2000) tengan el mismo peso inicial en el modelo.
@@ -250,4 +258,5 @@ def get_val_transforms(img_size=(224, 224)):
     ])
 ```
 
-![[Código 7.3 — Pipeline de Data Augmentation para Imágenes MRI 2D (Benchmarking)]](../../reports/figures/codigo_7_3_data_augmentation.png)
+![Código 7.3: Pipeline de Data Augmentation para Imágenes MRI 2D](../../reports/figures/codigo_7_3_data_augmentation.png)
+*Código 7.3: Especificación de la cadena de transformaciones aplicadas durante el entrenamiento de visión artificial, utilizando rotaciones y flips anatómicamente válidos.*

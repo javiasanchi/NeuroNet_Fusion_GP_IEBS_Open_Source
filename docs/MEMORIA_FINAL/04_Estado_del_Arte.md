@@ -39,6 +39,10 @@ El paradigma de fusión multimodal surge de la evidencia clínica de que ningún
 | 3D-ResNet50 Volumétrico | MRI 3D | ADNI | 85% | 0.84 | 0.91 | 2025 |
 | **NeuroNet-Fusion (Este trabajo)** | **MRI + 14 Biomarcadores** | **ADNI+OASIS** | **86.5%** | **0.864** | **0.898** | **2026** |
 
+![Tabla 4.1: Tabla Comparativa del Estado del Arte (SOTA)](tabla_sota_estado_arte.png)
+*Tabla 4.1: Comparativa técnica de NeuroNet-Fusion frente a las principales arquitecturas de la literatura académica (2019-2026), destacando la superioridad del enfoque multimodal.*
+
+
 ---
 
 ## 4.3 El Marco ATN — Posicionamiento Científico del Proyecto

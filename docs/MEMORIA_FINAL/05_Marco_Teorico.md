@@ -14,16 +14,8 @@ La **hipótesis de la cascada amiloide** (Hardy & Higgins, 1992) es el modelo fi
 ### 5.1.2 Biomarcadores del Marco ATN
 El marco ATN-NIA-AA 2018 clasifica los biomarcadores en tres grupos según el proceso patológico que reflejan:
 
-| Dominio | Biomarcador | Método | Valor Patológico |
-|:---|:---|:---|:---|
-| **A (Amiloide)** | Aβ42 en LCR | Punción lumbar | < 900 pg/mL |
-| | PET amiloide | Neuroimagen funcional | SUVR > 1.4 |
-| **T (Tau)** | pTau-181 en LCR | Punción lumbar | > 23 pg/mL |
-| | Tau total en LCR | Punción lumbar | > 450 pg/mL |
-| | PET tau | Neuroimagen funcional | Estadio Braak III-V |
-| **N (Neurodeg.)** | Hipocampo/ICV | MRI estructural T1 | < 0.0048 |
-| | FDG-PET | Neuroimagen metabólica | Hipometabolismo temporo-parietal |
-| | Atrofia cortical | MRI estructural T1 | Grosor cortical < 2.8mm |
+![Tabla 5.1.2: Biomarcadores del Marco ATN](../../reports/figures/tabla_5_1_2_atn.png)
+*Figura 5.1: Clasificación de biomarcadores según el Marco ATN (Amyloid-Tau-Neurodegeneration).*
 
 ---
 
@@ -85,3 +77,6 @@ Grad-CAM (Selvaraju *et al.*, 2017) genera mapas de saliencia para CNNs sin modi
 3. **Combinación ponderada con ReLU:** $L_{GradCAM}^c = ReLU\left(\sum_k \alpha_k^c A^k\right)$
 
 El resultado es un **mapa de calor** superpuesto sobre la MRI que indica qué regiones cerebrales determinaron el diagnóstico.
+
+![Mapa de calor Grad-CAM](../../reports/figures/gradcam_explainability.png)
+*Figura 5.2: Ejemplo visual de mapa de calor generado mediante Grad-CAM indicando áreas de relevancia diagnóstica sobre la MRI.*

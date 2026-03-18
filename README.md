@@ -6,8 +6,9 @@
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0-FF6600?style=for-the-badge&logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io)
-[![Streamlit](https://badges.aleen42.com/src/streamlit.svg)](https://streamlit.io)
+[![Streamlit](https://img.shields.io/badge/Streamlit-1.32-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
+[![YouTube](https://img.shields.io/badge/YouTube-Video_Demo-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/3Hjrgr_haM8)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 **IEBS Digital School — Postgrado en Inteligencia Artificial Aplicada 2026**  
@@ -15,7 +16,7 @@
 
 ---
 
-### [🚀 ACCEDER A LA APLICACIÓN EN VIVO](https://neuronet.iawordpress.com)
+### [🚀 ACCEDER A LA APLICACIÓN EN VIVO](https://neuronet.iawordpress.com) | [📺 VER VÍDEO PRESENTACIÓN](https://youtu.be/3Hjrgr_haM8)
 *Despliegue estable con SSL, Nginx y Docker*
 
 ---
@@ -79,7 +80,7 @@ El modelo no es una "caja negra". Mediante valores SHAP, se valida que los facto
 ### Mediante Docker (Recomendado)
 ```bash
 # Versión de portafolio para evaluadores
-git clone https://github.com/javiasanc/NeuroNet_Fusion_GP_IEBS.git
+git clone https://github.com/javiasanchi/NeuroNet_Fusion_GP_IEBS_Open_Source.git
 cd NeuroNet_Fusion_GP_IEBS
 docker-compose up -d --build
 ```
@@ -114,6 +115,6 @@ streamlit run src/app_diagnostics.py
 **Proyecto Final de Postgrado — 2026**  
 *Impulsando el diagnóstico de precisión mediante Inteligencia Artificial.*
 
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/tu-perfil-si-quieres)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/javier-sanchidri%C3%A1n-sanchidri%C3%A1n/)
 
 </div>

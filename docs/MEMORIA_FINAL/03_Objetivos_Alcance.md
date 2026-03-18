@@ -23,7 +23,8 @@ Desarrollar, entrenar y desplegar un sistema de Inteligencia Artificial basado e
 | OE-07 | Analizar importancia de biomarcadores (SHAP) | `shap` library (TreeSHAP) | Ranking clínico de los 5 factores determinantes |
 | OE-08 | Desplegar sistema web de soporte clínico interactivo | Streamlit | App CDSS con informe ATN descargable |
 
-![[Tabla 3.2 — Objetivos Específicos del Proyecto NeuroNet-Fusion]](../../reports/figures/tabla_3_2_objetivos.jpg)
+![Tabla 3.2: Objetivos Específicos del Proyecto NeuroNet-Fusion](../../reports/figures/tabla_3_2_objetivos.jpg)
+*Tabla 3.2: Desglose de los objetivos específicos (OE) del proyecto, detallando las herramientas metodológicas aplicadas y los resultados técnicos esperados en cada fase.*
 
 ---
 
@@ -68,7 +69,8 @@ Desarrollar, entrenar y desplegar un sistema de Inteligencia Artificial basado e
 | RNF-05 | **Usabilidad clínica** | Interfaz comprensible para personal sanitario sin conocimientos de IA |
 | RNF-06 | **Seguridad Térmica** | Aplicación de ThermalThrottleCallback para protección de CPU/GPU |
 
-![[Tabla 3.4 — Requerimientos No Funcionales del Sistema NeuroNet-Fusion]](../../reports/figures/tabla_3_4_rnf.jpg)
+![Tabla 3.4: Requerimientos No Funcionales del Sistema NeuroNet-Fusion](../../reports/figures/tabla_3_4_rnf.jpg)
+*Tabla 3.4: Detalle de los requerimientos no funcionales (RNF) orientados a garantizar la reproducibilidad científica, la portabilidad y la usabilidad clínica del modelo.*
 
 ---
 
@@ -119,5 +121,7 @@ numpy         >= 1.26
 matplotlib    >= 3.8
 seaborn       >= 0.13
 ```
+*Código 3.1: Configuración de dependencias clave (librerías y framework) para el entorno base de experimentación y despliegue en producción.*
 
-![[Tabla 3.6 — Pila Tecnológica Core del Sistema NeuroNet-Fusion]](../../reports/figures/tabla_3_6_pila_tecnologica.jpg)
+![Tabla 3.6: Pila Tecnológica Core del Sistema NeuroNet-Fusion](../../reports/figures/tabla_3_6_pila_tecnologica.jpg)
+*Tabla 3.6: Resumen visual de la pila tecnológica (Tech Stack) que conforma el core de IA y despliegue interactivo del proyecto NeuroNet-Fusion.*

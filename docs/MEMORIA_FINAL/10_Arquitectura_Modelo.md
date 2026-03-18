@@ -32,7 +32,8 @@ La arquitectura **NeuroNet-Fusion** se basa en un paradigma de **fusión de cara
 1.  **Rama de Morfología Global (ResNet50):** Utiliza un backbone ResNet50 para extraer un vector de 2048 dimensiones. Esta rama, gracias a sus conexiones residuales y profundidad, se especializa en detectar alteraciones macro estructurales, como la atrofia del hipocampo o el ensanchamiento ventricular.
 2.  **Rama de Textura de Tejido (DenseNet121):** Utiliza un backbone DenseNet121 para extraer 1024 dimensiones adicionales. Las conexiones densas de esta red permiten una reutilización de características de bajo nivel, lo que resulta óptimo para identificar cambios sutiles en la textura de la materia gris y blanca que preceden a la atrofia visible.
 
-![Código 10.2.1 — Arquitectura NeuroNet-Fusion (Dual Backbone)](../../reports/figures/codigo_10_2_neuronet_fusion.png)
+![Código 10.1: Definición de la Red Neuronal Dual-Backbone](../../reports/figures/codigo_10_2_neuronet_fusion.png)
+*Código 10.1: Arquitectura de visión artificial basada en la fusión de dos encoders (ResNet50 y DenseNet121) para la captura de patrones morfológicos cerebrales.*
 
 #### Mecanismo de Fusión y Cabezal de Clasificación
 
@@ -48,7 +49,8 @@ El núcleo de la red es su **clasificador de fusión**, que opera sobre el vecto
 
 La configuración de la red NeuroNet-Fusion no fue arbitraria, sino el resultado de un proceso de optimización donde se evaluaron diversas arquitecturas base y mecanismos de regularización. La siguiente tabla resume las decisiones clave que permitieron alcanzar un rendimiento estable durante la fase de benchmarking:
 
-![[Tabla 10.2.2 — Justificación de Decisiones de Arquitectura NeuroNet-Fusion]](../../reports/figures/tabla_10_2_2_justificacion.jpg)
+![Tabla 10.1: Justificación de las Decisiones de Arquitectura](../../reports/figures/tabla_10_2_2_justificacion.jpg)
+*Tabla 10.1: Matriz de justificación técnica sobre la elección de hiperparámetros y componentes de la arquitectura del modelo de visión.*
 
 #### Análisis de Componentes Críticos
 
@@ -76,7 +78,8 @@ La red implementa una variante de **ResNet3D** optimizada para el procesamiento 
 *   **Bloques Residuales 3D:** Se diseñaron bloques con *skip connections* que facilitan el flujo de gradientes en tensores de gran tamaño. Cada bloque consta de dos capas de convolución $3 \times 3 \times 3$, seguidas de una normalización de lote tridimensional ($BatchNorm3d$).
 *   **Agregación Global:** Tras las capas de convolución, se utiliza un $AdaptiveAvgPool3d$ que colapsa el volumen de características en un vector latente de 256 dimensiones antes de pasar a la capa totalmente conectada.
 
-![Código 10.3 — Arquitectura NeuroNet3D](../../reports/figures/codigo_10_3_neuronet3d.png)
+![Código 10.2: Arquitectura Volumétrica NeuroNet3D](../../reports/figures/codigo_10_3_neuronet3d.png)
+*Código 10.2: Implementación de la arquitectura convolucional 3D personalizada para el procesamiento directo de volúmenes MR NIfTI (128x128x128).*
 
 ### 10.3.2 Desafíos y Conclusiones de la Fase 3D
 
@@ -93,7 +96,8 @@ A pesar de su potencial teórico, la implementación 3D presentó desafíos crí
 
 El modelo de producción desplegado en la plataforma de diagnóstico NeuroNet-Fusion no es un modelo aislado, sino un **Ensemble de Votación Blanda (Soft Voting)** optimizado para la máxima estabilidad clínica. Esta arquitectura integra el aprendizaje de tres paradigmas de Gradient Boosting para minimizar el error de generalización.
 
-![Diagrama de Arquitectura de Producción — NeuroNet-Fusion](../../reports/figures/grafico_10_4_arquitectura_final.png)
+![Figura 10.1: Mapa de la Arquitectura de Producción de NeuroNet-Fusion](../../reports/figures/grafico_10_4_arquitectura_final.png)
+*Figura 10.1: Diagrama de flujo del sistema final desplegado, mostrando la integración de biomarcadores tabulares como único input para garantizar eficiencia y explicabilidad.*
 
 ### 10.4.1 Análisis del Modelo Champion y Estrategia de Ensemble
 
@@ -107,7 +111,8 @@ El núcleo del sistema es un modelo **XGBoost** altamente regularizado (`reg_alp
 
 La transición de un modelo único a un ensemble supuso una mejora marginal en el *accuracy* absoluto, pero una mejora crítica en la **estabilidad del dictamen**, reduciendo la varianza de predicción significativamente.
 
-![[Tabla 10.4.1 — Comparativa de Rendimiento - Modelo Único vs. Ensemble de Producción]](../../reports/figures/tabla_10_4_1_ensemble.jpg)
+![Tabla 10.2: Comparativa de Rendimiento - Modelo Único vs. Ensemble](../../reports/figures/tabla_10_4_1_ensemble.jpg)
+*Tabla 10.2: Resultados de la validación del impacto de la votación blanda (Soft Voting) en la estabilidad y precisión del diagnóstico frente al uso de un único clasificador.*
 
 > **Decisión Técnica:** El ligero incremento en el tiempo de inferencia (de 34ms a 89ms) es despreciable en un entorno clínico, donde la fiabilidad del diagnóstico y la reducción del error en casos frontera (*borderline*) son la prioridad absoluta.
 

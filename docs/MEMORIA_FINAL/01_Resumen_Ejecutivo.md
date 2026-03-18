@@ -48,7 +48,8 @@ La enfermedad de Alzheimer (EA) representa la primera causa de demencia a nivel 
 | **Aplicación clínica** | Streamlit CDSS + dictamen ATN descargable |
 | **Integración NLP** | Agente Clínico (GPT-4o-mini) integrado |
 
-![[Tabla 0.1 — Resumen de Resultados Clave de NeuroNet-Fusion]](../../reports/figures/tabla_resumen_ejecutivo.jpg)
+![Tabla 0.1: Resumen de Resultados Clave de NeuroNet-Fusion](../../reports/figures/tabla_resumen_ejecutivo.jpg)
+*Tabla 0.1: Resumen ejecutivo de los principales indicadores de rendimiento, métricas de evaluación empírica y especificaciones técnicas del modelo final XGBoost desplegado.*
 
 ---
 

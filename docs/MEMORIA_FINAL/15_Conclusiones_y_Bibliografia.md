@@ -24,7 +24,8 @@ El proyecto **NeuroNet-Fusion** ha desarrollado y validado un pipeline de Inteli
 
 | OE-09 | Aplicación clínica Streamlit | ✅ | CDSS con Agente Clínico (NLP 4o-mini) |
 
-![[Tabla 15.2 — Estado de Consecución de Objetivos Específicos del Proyecto]](../../reports/figures/tabla_15_2_objetivos.jpg)
+![Tabla 15.1: Estado de Consecución de Objetivos Específicos](../../reports/figures/tabla_15_2_objetivos.jpg)
+*Tabla 15.1: Matriz de cumplimiento de objetivos técnicos y metodológicos, detallando el estado de éxito y la evidencia documental generada.*
 
 **Logro de Hitos:**
 El proyecto ha completado satisfactoriamente todas las fases del ciclo de vida de un sistema de IA médica. Se ha demostrado que es posible integrar datos de múltiples centros (ADNI/OASIS) y dominios (Clínico/MRI) en una única herramienta operativa.
@@ -50,7 +51,8 @@ El proyecto ha completado satisfactoriamente todas las fases del ciclo de vida d
 
 | **Generalización MRI** | Los 135 volúmenes 3D procesados son una muestra pequeña para Deep Learning volumétrico | Escala a los 11.606 volúmenes completos |
 
-![[Tabla 15.4 — Análisis de Limitaciones y Mitigación: Hoja de Ruta Ética y Técnica]](../../reports/figures/tabla_15_4_limitaciones.jpg)
+![Tabla 15.2: Análisis de Limitaciones y Mitigación](../../reports/figures/tabla_15_4_limitaciones.jpg)
+*Tabla 15.2: Identificación de restricciones actuales del sistema (muestreo 3D y escalabilidad) y hoja de ruta para la mitigación en futuras fases clínicas.*
 
 **Análisis Crítico:**
 A pesar de la alta precisión alcanzada, el modelo debe ser entendido como un prototipo de validación científica. La transición a la práctica clínica real requiere un escalado masivo de la rama de Visión Artificial (MRI 3D) y un proceso formal de certificación como producto sanitario (CE Marking).
@@ -81,7 +83,8 @@ El Alzheimer sigue siendo una enfermedad sin cura. Pero el diagnóstico temprano
 
 > *"La IA no reemplaza al neurólogo. Le da el tiempo que el paciente necesita."*
 
-![[Banner 15.6 — Reflexión Final: El Rol de la IA en la Neurología del Siglo XXI]](../../reports/figures/banner_reflexion_final.jpg)
+![Banner 15.1: Reflexión Final sobre la IA en Neurología](../../reports/figures/banner_reflexion_final.jpg)
+*Banner 15.1: Conclusión integradora del proyecto sobre la sinergia entre la tecnología de inteligencia artificial y la práctica diagnóstica neurológica.*
 
 ---
 

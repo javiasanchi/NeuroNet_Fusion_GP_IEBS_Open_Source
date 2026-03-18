@@ -21,7 +21,8 @@ Para asegurar una comparativa exhaustiva, se seleccionó un conjunto diverso de 
 2. **Ensambles de Árboles:** Desde arquitecturas clásicas como Random Forest hasta los modernos Gradient Boosting optimizados (XGBoost, LightGBM, CatBoost), conocidos por su dominio en datos tabulares.
 3. **Deep Learning (1D y 3D):** Incluye Perceptrones Multicapa (MLP) para datos tabulares y redes convolucionales (ResNet3D) para la extracción directa de características desde los volúmenes de imagen.
 
-![[Tabla 9.2 — Inventario de Algoritmos Evaluados en el Benchmark]](../../reports/figures/tabla_9_2_algoritmos.jpg)
+![Tabla 9.1: Inventario de Algoritmos Evaluados en el Benchmark](../../reports/figures/tabla_9_2_algoritmos.jpg)
+*Tabla 9.1: Inventario exhaustivo de los 12 algoritmos evaluados, categorizados por familias tecnológicas: modelos lineales, ensambles de árboles y redes neuronales profundas.*
 
 ---
 
@@ -29,7 +30,8 @@ Para asegurar una comparativa exhaustiva, se seleccionó un conjunto diverso de 
 
 El pipeline de evaluación (Fig. 9.1) permitió obtener una visión clara de la capacidad de generalización de cada arquitectura. Los resultados fueron calculados sobre el 20 % del dataset reservado para test, asegurando que ningún rastro del proceso de optimización (Optuna) se filtrara en estas métricas.
 
-![Código 9.3 — Pipeline de Benchmarking Comparativo](../../reports/figures/codigo_9_3_benchmark_pipeline.png)
+![Código 9.1: Pipeline de Benchmarking Comparativo](../../reports/figures/codigo_9_3_benchmark_pipeline.png)
+*Código 9.1: Implementación del flujo de evaluación sistemática para la comparación de arquitecturas bajo condiciones idénticas de validación cruzada.*
 
 ### 9.3.1 Desempeño por Paradigma
 
@@ -39,7 +41,8 @@ Tras ejecutar las pruebas, observamos tres niveles de rendimiento claramente dif
 2.  **Zona Intermedia (MLP, SVM, ResNet3D):** Los modelos con mayor capacidad de representación alcanzaron el **52-60 %**. Es notable que la ResNet3D, aun con pocos datos, logró un 60 %, sugiriendo que hay información volumétrica valiosa, pero difícil de capturar sin un dataset de miles de pacientes.
 3.  **Zona de Excelencia (XGBoost, LightGBM, CatBoost):** Los algoritmos de Gradient Boosting dominaron el benchmark con resultados superiores al **81 %**. XGBoost se alzó como el campeón con un **86.5 % de accuracy** y un **AUC de 0.898**.
 
-![[Tabla 9.3 — Resultados Comparativos del Benchmarking Multimodal]](../../reports/figures/tabla_9_3_bench_results.jpg)
+![Tabla 9.2: Resultados Comparativos del Benchmarking Multimodal](../../reports/figures/tabla_9_3_bench_results.jpg)
+*Tabla 9.2: Ranking de rendimiento de las arquitecturas evaluadas, destacando la superioridad de XGBoost en precisión y eficiencia frente a modelos complejos de imagen.*
 
 > **Interpretación Clínica:** La brecha de rendimiento entre los modelos tabulares (86.5 %) y los de imagen pura (60 %) confirma que, para el diagnóstico triclase (CN/MCI/AD), los biomarcadores moleculares del LCR (TAU, ABETA) y las pruebas cognitivas (MMSE, ADAS11) tienen una densidad de información predictiva mucho mayor que la morfología cerebral capturada por la MRI bruta.
 
@@ -59,13 +62,13 @@ La elección de **XGBoost** como el motor de predicción final no se basó únic
 
 Tras 100 iteraciones con el motor de búsqueda Bayesiana **TPESampler** de Optuna, se identificó la configuración óptima que minimiza el sobreajuste sin sacrificar exactitud:
 
-![Código 9.4 — Hiperparámetros Óptimos XGBoost](../../reports/figures/codigo_9_4_best_params.png)
+![Código 9.2: Hiperparámetros Óptimos de la Configuración Champion](../../reports/figures/codigo_9_4_best_params.png)
+*Código 9.2: Especificación de la configuración ganadora de XGBoost identificada mediante optimización bayesiana para el despliegue en producción.*
 
 
 ---
 
 ## 9.5 Comparativa Visual: Benchmark de Accuracy
 
-![Gráfica comparativa de Accuracy — Benchmark de Algoritmos](../../reports/figures/grafica_benchmark_accuracy.png)
-
-*Figura: Comparativa de accuracy de todos los algoritmos evaluados en el benchmark. XGBoost domina claramente sobre todos los paradigmas, incluyendo los modelos de Deep Learning sobre imagen 3D.*
+![Figura 9.1: Comparativa Visual de Accuracy en el Benchmark](../../reports/figures/grafica_benchmark_accuracy.png)
+*Figura 9.1: Representación gráfica de la precisión alcanzada por cada algoritmo, evidenciando el dominio de los métodos de gradient boosting sobre el dataset de biomarcadores.*

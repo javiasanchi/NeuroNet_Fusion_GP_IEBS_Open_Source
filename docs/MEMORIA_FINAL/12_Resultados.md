@@ -15,7 +15,8 @@ El modelo final fue evaluado sobre el **conjunto de test independiente** (2.322 
 | **AUC-ROC (Multiclase OvR)** | **0.898** | Muy alta capacidad discriminativa entre los 3 estadios |
 | **Kappa de Cohen** | **0.797** | Acuerdo sustancial entre modelo y diagnóstico gold-standard |
 
-![[Tabla 12.1.1 — Resumen de Métricas Globales (NeuroNet-Fusion)]](../../reports/figures/tabla_12_1_1_metricas.jpg)
+![Tabla 12.1: Resumen de Métricas Globales (NeuroNet-Fusion)](../../reports/figures/tabla_12_1_1_metricas.jpg)
+*Tabla 12.1: Análisis comparativo de los indicadores de rendimiento global del modelo XGBoost optimizado sobre el conjunto de test independiente.*
 
 **Interpretación de resultados:**
 Los resultados cuantitativos obtenidos reflejan un modelo robusto con un **Accuracy Global del 86.5%**. Especial relevancia tiene el valor de **AUC-ROC (0.898)**, que confirma una capacidad discriminativa excelente entre las clases analizadas. El valor de **Kappa de Cohen (0.797)** indica un "acuerdo sustancial" según los criterios de Landis y Koch, situándose muy cerca del rango de acuerdo casi perfecto, lo que valida la fiabilidad del sistema para su uso en entornos clínicos de apoyo al diagnóstico.
@@ -33,7 +34,8 @@ Los resultados cuantitativos obtenidos reflejan un modelo robusto con un **Accur
 | **Promedio Ponderado** | 0.87 | 0.86 | 0.86 | 400 |
 | **Accuracy Final** | | | **0.865** | **400** |
 
-![[Tabla 12.1.2 — Reporte de Clasificación Detallado por Estadio Clínico]](../../reports/figures/tabla_12_1_2_clasificacion.jpg)
+![Tabla 12.2: Reporte de Clasificación Detallado por Estadio Clínico](../../reports/figures/tabla_12_1_2_clasificacion.jpg)
+*Tabla 12.2: Desglose exhaustivo de precisión, sensibilidad y F1-score para cada una de las tres categorías diagnósticas evaluadas.*
 
 **Análisis por Estadio:**
 El desglose del reporte revela una jerarquía de precisión alineada con la progresión de la enfermedad. Destaca el desempeño en la clase **AD Moderado**, donde el modelo alcanza la **perfección estadística (1.00 en todas sus métricas)** sobre 113 casos de prueba, garantizando que ningún paciente grave sea erróneamente clasificado en estadios más leves. En el estadio **MCI (Sensibilidad del 82%)**, el modelo demuestra una capacidad robusta para identificar el deterioro cognitivo leve, superando significativamente los umbrales típicos de los modelos basados únicamente en biomarcadores individuales.
@@ -65,7 +67,8 @@ Real  CN (Sano) [ 77     17     10      0  ]   ← 77 correctos, 27 alertas prev
        ADMod    [  0      0      0    113  ]   ← 113/113 perfectos ✓
 ```
 
-![[Gráfico 12.3 — Matriz de Confusión Final: NeuroNet-Fusion]](../../reports/figures/confusion_matrix_final.png)
+![Figura 12.1: Matriz de Confusión Final: NeuroNet-Fusion](../../reports/figures/confusion_matrix_final.png)
+*Figura 12.1: Matriz de confusión del sistema final desplegado, evidenciando el 100% de sensibilidad en la detección de Alzheimer moderado (AD).*
 
 **Análisis del patrón de errores:**
 - Los errores ocurren **exclusivamente entre clases adyacentes** (CN↔MCI, MCI↔AD), lo que es consistente con la naturaleza progresiva del espectro de la EA.
@@ -101,9 +104,11 @@ ax.set_title('Curvas ROC Multiclase — NeuroNet-Fusion')
 ax.legend(loc='lower right')
 ```
 
-![[Código 12.4 — Implementación de Curvas ROC con Scikit-Learn]](../../reports/figures/codigo_12_4_roc.jpg)
+![Código 12.1: Implementación de Curvas ROC con Scikit-Learn](../../reports/figures/codigo_12_4_roc.jpg)
+*Código 12.1: Implementación técnica del cálculo y visualización de las curvas ROC multiclase utilizando la estrategia One-vs-Rest.*
 
-![[Gráfico 12.4 — Curvas ROC Multiclase (One-vs-Rest) del Modelo Final]](../../reports/figures/roc_curves_final.png)
+![Figura 12.2: Curvas ROC Multiclase del Modelo Final](../../reports/figures/roc_curves_final.png)
+*Figura 12.2: Representación de la capacidad discriminativa del modelo para cada estadio clínico, alcanzando un AUC macro promedio de 0.898.*
 
 **Análisis de Sensibilidad y Especificidad (ROC-AUC):**
 El análisis mediante curvas ROC permite evaluar el balance entre la sensibilidad (capacidad de detección) y la especificidad (capacidad de descartar sanos) en todos los posibles umbrales de decisión. El valor del **AUC Macro-Promedio de 0.898** sitúa a NeuroNet-Fusion en un nivel de "excelencia diagnóstica" según los estándares biomédicos.
@@ -118,7 +123,8 @@ El análisis mediante curvas ROC permite evaluar el balance entre la sensibilida
 | **AD Moderado** | **1.000** | Discriminación perfecta |
 | **Macro Promedio** | **0.898** | **Nivel de excelencia clínica** |
 
-![[Tabla 12.4.1 — Desglose de Valores AUC por Estadio Clínico]](../../reports/figures/tabla_auc_roc_resultados.png)
+![Tabla 12.3: Desglose de Valores AUC por Estadio Clínico](../../reports/figures/tabla_auc_roc_resultados.png)
+*Tabla 12.3: Cuantificación del área bajo la curva (AUC) para cada categoría, confirmando la excelencia del modelo en todas las etapas patológicas.*
 
 **Conclusiones del análisis ROC:**
 1.  **Detección Crítica:** La obtención de un AUC de 1.000 en AD Moderado garantiza un filtrado de seguridad absoluto para los pacientes en fases avanzadas.
@@ -141,7 +147,8 @@ feature_names = ['MMSE', 'CDR', 'FAQ', 'ADAS11', 'EDUCYEARS', 'AGE',
 importance = model.get_booster().get_score(importance_type='gain')
 ```
 
-![[Código 12.5 — Extracción de Feature Importance (XGBoost Gain)]](../../reports/figures/codigo_12_5_importance.jpg)
+![Código 12.2: Extracción de Feature Importance (XGBoost Gain)](../../reports/figures/codigo_12_5_importance.jpg)
+*Código 12.2: Lógica de extracción y ordenamiento de las variables de entrada según su importancia relativa calculada mediante la ganancia de información.*
 
 **Metodología de Importancia de Variables (XAI):**
 Para garantizar la interpretabilidad clínica del modelo —un requisito crítico en salud—, se ha implementado la extracción del **Feature Importance** utilizando el parámetro **'gain'** de XGBoost. A diferencia de otras métricas como 'weight' (frecuencia), el 'gain' cuantifica la contribución real de cada variable a la reducción de la incertidumbre (impureza) en los nodos de decisión. Esto permite identificar cuáles son los biomarcadores con mayor peso diagnóstico real en la predicción del estadio evolutivo de la enfermedad.
@@ -168,7 +175,8 @@ EDUCYEARS             █                 0.067
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ```
 
-![[Gráfico 12.5 — Ranking de Importancia de Biomarcadores (NeuroNet-Fusion)]](../../reports/figures/grafico_12_5_feature_importance.jpg)
+![Figura 12.3: Ranking de Importancia de Biomarcadores](../../reports/figures/grafico_12_5_feature_importance.jpg)
+*Figura 12.3: Visualización del ranking de importancia global de los 14 biomarcadores, destacando el predominio de las escalas cognitivas y la volumetría hipocampal.*
 
 **Interpretación neurológica:**
 - **MMSE lidera** con una ventaja clara: es la síntesis cuantitativa de 11 dominios cognitivos en una sola puntuación, altamente correlacionada con la integridad cortical global.

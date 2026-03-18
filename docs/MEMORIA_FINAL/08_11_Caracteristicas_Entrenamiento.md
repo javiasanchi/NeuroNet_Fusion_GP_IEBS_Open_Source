@@ -10,7 +10,8 @@ La función `extract_embeddings` aplica la cadena de preprocesamiento estándar 
 
 > **Decisión de diseño:** se optó por ResNet50 frente a arquitecturas más profundas (ResNet101, EfficientNet-B7) como compromiso entre capacidad representacional y coste computacional. Los experimentos preliminares mostraron que ResNet50 alcanza una transferibilidad equivalente al dominio MRI con un 40 % menos de parámetros que ResNet101.
 
-![Código 8.1 — Extracción de Embeddings con ResNet50](../../reports/figures/codigo_8_1_feature_extractor_resnet.png)
+![Código 8.1: Extracción de Deep Embeddings con ResNet50](../../reports/figures/codigo_8_1_feature_extractor_resnet.png)
+*Código 8.1: Definición de la clase FeatureExtractor encargada de proyectar las imágenes MRI a un espacio latente de 2.048 dimensiones mediante transfer learning.*
 
 ---
 
@@ -22,7 +23,8 @@ Cada bloque lineal incorpora **LayerNorm** aplicada sobre la dimensión de carac
 
 > **Justificación de la dimensión latente:** se eligió 128-D como compromiso entre poder expresivo y riesgo de sobreajuste. Experimentos con latentes de 64-D degradaron el F1 en MCI en 3.2 puntos; con 256-D el modelo no mejoró pero aumentó el tiempo de entrenamiento un 18 %. La dimensión 128 maximiza la relación rendimiento/coste.
 
-![Código 8.2 — Arquitectura ClinicalMLP](../../reports/figures/codigo_8_2_clinical_mlp.png)
+![Código 8.2: Arquitectura ClinicalMLP](../../reports/figures/codigo_8_2_clinical_mlp.png)
+*Código 8.2: Arquitectura del encoder MLP diseñado para la representación densa de biomarcadores tabulares, integrando capas LayerNorm para la estabilidad de activación.*
 
 ---
 
@@ -38,7 +40,8 @@ El vector fusionado pasa por un **cuello de botella** (*bottleneck*) que lo proy
 
 > **Alternativas evaluadas:** se probó fusión mediante *cross-attention* (Transformer) y fusión tardía (*late fusion* con clasificadores independientes por modalidad). La concatenación con bottleneck superó a ambas alternativas en 1.8 y 3.4 puntos de F1-macro respectivamente, con menor número de parámetros entrenables.
 
-![Código 8.3 — Estrategia de Fusión y Bottleneck](../../reports/figures/codigo_8_3_fusion_caracteristicas.png)
+![Código 8.3: Estrategia de Concatenación y Bottleneck](../../reports/figures/codigo_8_3_fusion_caracteristicas.png)
+*Código 8.3: Lógica de fusión temprana mediante concatenación de modalidades y aplicación del módulo de cuello de botella para la reducción supervisada de dimensionalidad.*
 
 **Justificación del cuello de botella:**
 - Reduce la dimensionalidad de 2176 a 512 sin pérdida de información crítica.
@@ -60,11 +63,13 @@ La función `extract_glcm_features` opera sobre cortes axiales 2D de la resonanc
 
 Para comparación y como características auxiliares, se calcularon descriptores de textura GLCM:
 
-![Código 8.4 — Extracción de Texturas GLCM](../../reports/figures/codigo_8_4_glcm_features.png)
+![Código 8.4: Extracción de Texturas mediante GLCM](../../reports/figures/codigo_8_4_glcm_features.png)
+*Código 8.4: Implementación de la extracción de descriptores de textura de segundo orden a partir de matrices de co-ocurrencia de niveles de gris (GLCM).*
 
 **Correlación de features GLCM con el diagnóstico:**
 
-![[Tabla 8.4 — Correlación de descriptores de textura GLCM con el Diagnóstico]](../../reports/figures/tabla_8_4_glcm_corr.jpg)
+![Tabla 8.1: Correlación de descriptores GLCM con el Diagnóstico](../../reports/figures/tabla_8_4_glcm_corr.jpg)
+*Tabla 8.1: Coeficientes de correlación de Pearson entre los descriptores de textura extraídos y la categoría diagnóstica, evidenciando la relevancia de la homogeneidad.*
 
 ---
 
@@ -76,13 +81,15 @@ Tras el análisis de importancia SHAP (Fase 9) y el benchmarking exhaustivo de F
 
 **Criterio teórico (marco ATN):** Cada feature se ancla a uno de los dominios del marco diagnóstico **ATN** (*Amyloid, Tau, Neurodegeneration*) propuesto por Jack et al. (2018), que constituye el estándar clínico de referencia para la clasificación biológica del Alzheimer:
 
-![[Tabla 8.5 — Mapeo de Características al Marco ATN-NIA-AA]](../../reports/figures/tabla_8_5_atn_mapping.jpg)
+![Tabla 8.2: Mapeo de Características al Marco ATN-NIA-AA](../../reports/figures/tabla_8_5_atn_mapping.jpg)
+*Tabla 8.2: Clasificación de los 14 biomarcadores de entrada según su correspondencia con los dominios biológicos del marco diagnóstico internacional ATN.*
 
 `TARGET_COLUMN = 'DX'` define la variable dependiente como diagnóstico clínico con tres categorías ordinales: **CN** (*Cognitively Normal*), **MCI** (*Mild Cognitive Impairment*) y **AD** (*Alzheimer's Disease*), codificadas como 0, 1 y 2 respectivamente.
 
 Tras el análisis de importancia y el benchmarking, el modelo de producción utiliza los **14 biomarcadores clínicos** como features directas (sin embedding intermedio), evitando el overhead computacional del MLP clínico:
 
-![Código 8.5 — Definición de Características de Producción](../../reports/figures/codigo_8_5_feature_columns.png)
+![Código 8.5: Definición de las 14 Variables de Producción](../../reports/figures/codigo_8_5_feature_columns.png)
+*Código 8.5: Especificación de la lista definitiva de variables (biomarcadores cognitivos, estructurales y moleculares) consumidas por el modelo champion.*
 
 > La selección de estos 14 features se justifica empíricamente por el benchmarking (Fase 9) y teóricamente por el marco ATN: cada feature mapea a uno de los tres dominios patológicos (A, T o N) o a factores de riesgo demostrados (edad, APOE4, educación).
 
@@ -105,7 +112,8 @@ El **scheduler OneCycleLR** gestiona la tasa de aprendizaje dinámicamente a niv
 La función de pérdida **CrossEntropyLoss con label_smoothing=0.1** suaviza las etiquetas duras (one-hot) distribuyendo un 10 % de la masa de probabilidad entre las clases no correctas. Esto penaliza la sobreconfianza del modelo —crítica en clasificación médica donde la incertidumbre diagnóstica es legítima— y mejora la calibración probabilística de las salidas del clasificador.
 
 **Fase 1 — Pre-entrenamiento (epochs 1-20):**
-![Código 11.1 — Configuración del Entrenamiento en Dos Fases](../../reports/figures/codigo_11_1_dos_fases.png)
+![Código 11.1: Configuración del Entrenamiento en Dos Fases](../../reports/figures/codigo_11_1_dos_fases.png)
+*Código 11.1: Implementación del flujo de entrenamiento secuencial: congelación de backbones (épocas 1-20) y fine-tuning global (épocas 21-100).*
 
 ### 11.1.2 Loop de Entrenamiento Principal
 
@@ -117,17 +125,20 @@ La función `train_epoch` encapsula el ciclo de entrenamiento de una época comp
 
 El scheduler se avanza **por batch** (`scheduler.step()` dentro del bucle `for`), requerimiento específico de OneCycleLR que implementa la curva de cambio de LR a resolución de paso, no de época. La función devuelve la pérdida media por batch y la precisión porcentual de la época, que se registran en el sistema de monitorización de la sección 11.3.
 
-![Código 11.2 — Loop de Entrenamiento con AMP y Gradient Clipping](../../reports/figures/codigo_11_2_train_loop.png)
+![Código 11.2: Loop de Entrenamiento con AMP y Gradient Clipping](../../reports/figures/codigo_11_2_train_loop.png)
+*Código 11.2: Implementación optimizada del ciclo de entrenamiento, integrando precisión mixta automática (FP16) para la reducción del consumo de VRAM.*
 
 ### 11.1.3 Curva de Aprendizaje — Evolución del Entrenamiento
 
 La siguiente tabla recoge los puntos clave de la evolución del entrenamiento durante las 100 épocas. Se observan tres zonas de comportamiento diferenciado: una fase de **aprendizaje rápido** (1–20, solo clasificador), una fase de **fine-tuning estable** (21–70) y una fase de **saturación controlada** (71–95) donde el Early Stopping actúa para preservar el mejor checkpoint.
 
-![Tabla curva de aprendizaje — CNN Dual-Backbone](../../reports/figures/tabla_curva_aprendizaje.png)
+![Tabla 11.1: Resumen de la Evolución del Entrenamiento](../../reports/figures/tabla_curva_aprendizaje.png)
+*Tabla 11.1: Registro de métricas de pérdida (loss) y precisión (accuracy) en puntos de control estratégicos durante las 100 épocas de entrenamiento.*
 
 > **Interpretación del gap train/val:** la diferencia entre Train Acc (88.2 %) y Val Acc (85.9 %) en la época de parada es de solo 2.3 puntos, lo que indica un nivel de generalización muy saludable para un conjunto de ~830 pacientes. La ligera subida de Val Loss en las épocas 86–95 con Train Loss aún decreciente es la señal clásica de inicio de sobreajuste, correctamente detectada por el Early Stopping.
 
-![Curva de aprendizaje — Loss y Accuracy por época](../../reports/figures/training_evolution.png)
+![Figura 11.1: Curvas de Aprendizaje (Loss y Accuracy)](../../reports/figures/training_evolution.png)
+*Figura 11.1: Representación gráfica de la convergencia del modelo, mostrando la evolución de la precisión de validación frente al baseline previo (73.25%).*
 
 *Figura 11.1 — Evolución de Loss (izquierda) y Accuracy de validación (derecha) durante las 100 épocas. La línea azul discontinua marca el baseline previo (73.25 %). El modelo supera el baseline a partir de la época 22.*
 
@@ -135,11 +146,13 @@ La siguiente tabla recoge los puntos clave de la evolución del entrenamiento du
 
 El modelo seleccionado (checkpoint de la época 85) se evalúa sobre el conjunto de test reservado. La matriz de confusión refleja el rendimiento por clase y permite identificar los patrones de error más frecuentes:
 
-![Matriz de confusión — NeuroNet-Fusion evaluación final](../../reports/figures/confusion_matrix_final.png)
+![Figura 11.2: Matriz de Confusión - Evaluación CNN 2D](../../reports/figures/confusion_matrix_final.png)
+*Figura 11.2: Matriz de confusión resultante de la evaluación del modelo Dual-Backbone sobre el conjunto de test, detallando el patrón de errores entre clases.*
 
 *Figura 11.2 — Matriz de confusión sobre el conjunto de test. Filas: etiqueta real. Columnas: predicción del modelo.*
 
-![Tabla evaluación final por clase — CNN Dual-Backbone](../../reports/figures/tabla_evaluacion_final.png)
+![Tabla 11.2: Reporte de Evaluación por Estadio Clínico](../../reports/figures/tabla_evaluacion_final.png)
+*Tabla 11.2: Desglose de métricas de clasificación (Precisión, Recall y F1) para el modelo CNN evaluado durante la etapa de benchmarking.*
 
 > **Nota clínica:** los errores de confusión se producen mayoritariamente entre etapas adyacentes (NonDemented ↔ VeryMild, VeryMild ↔ Mild), lo que es esperable y clínicamente aceptable dado el continuum patológico del Alzheimer. La clasificación perfecta de ModerateDemented (AUC = 1.000) refleja que el deterioro severo presenta patrones morfológicos suficientemente discriminativos para el Dual-Backbone.
 
@@ -161,11 +174,13 @@ Los hiperparámetros `tree_method='hist'` y `device='cuda'` habilitan el algorit
 
 La función objetivo evalúa cada configuración mediante **validación cruzada estratificada de 5 folds** sobre el conjunto de entrenamiento, con `n_jobs=-1` para paralelizar los folds. Retornar la media del CV en lugar del accuracy sobre un único split de validación garantiza estimaciones más robustas y reduce el sesgo de selección por varianza muestral.
 
-![Código 11.3 — Optimización de Hiperparámetros con Optuna](../../reports/figures/codigo_11_3_optuna_xgboost.png)
+![Código 11.3: Optimización Bayesiana con Optuna](../../reports/figures/codigo_11_3_optuna_xgboost.png)
+*Código 11.3: Implementación de la búsqueda Bayesiana de hiperparámetros para XGBoost utilizando el algoritmo TPE y validación cruzada estratificada.*
 
 **Resultados de la búsqueda Optuna (Top-5 trials):**
 
-![Tabla resultados Optuna Top-5 — XGBoost](../../reports/figures/tabla_optuna_top5.png)
+![Tabla 11.3: Resultados del Ranking Optuna (Top-5)](../../reports/figures/tabla_optuna_top5.png)
+*Tabla 11.3: Comparativa de rendimiento de los cinco mejores sets de hiperparámetros identificados durante la fase de optimización automatizada.*
 
 **Análisis e interpretación de los resultados:**
 
@@ -181,7 +196,8 @@ La búsqueda TPE convergió en 100 trials hacia una región del espacio de hiper
 
 **5. Regularización L1/L2 asimétrica:** en los Top-5 se observa consistentemente `reg_α` (L1) < `reg_λ` (L2), lo que refleja que la estructura del problema —14 features de alta relevancia, según el análisis SHAP— no requiere selección agresiva de variables (L1 elevado), sino suavizado de pesos (L2 moderado). El trial 4, con `reg_λ = 5.30`, aplica la regularización más agresiva y obtiene el rendimiento más bajo del Top-5, sugiriendo que underfitting por exceso de penalización L2 es un riesgo real en este dominio.
 
-![Tabla patrones identificados — Optuna TPE](../../reports/figures/tabla_patrones_optuna.png)
+![Tabla 11.4: Patrones identificados en la búsqueda Optuna](../../reports/figures/tabla_patrones_optuna.png)
+*Tabla 11.4: Análisis técnico de los patrones de convergencia observados en los parámetros de regularización y profundidad de los árboles del modelo.*
 
 > **Conclusión:** la configuración ganadora (Trial 1: n_est=850, depth=6, lr=0.048) representa el balance óptimo entre **capacidad del ensamble** y **regularización estocástica**, con un Accuracy CV-5 de **0.870** sobre los 14 biomarcadores clínicos. La diferencia entre el primer y quinto trial es de solo 1.5 puntos porcentuales (0.870 vs. 0.855), lo que indica que la región óptima del espacio de búsqueda es **ancha y estable** — los resultados son robustos frente a pequeñas variaciones en los hiperparámetros.
 
@@ -189,13 +205,15 @@ La búsqueda TPE convergió en 100 trials hacia una región del espacio de hiper
 
 Las curvas ROC permiten evaluar la capacidad discriminativa del modelo XGBoost entrenado con los hiperparámetros óptimos de Optuna, independientemente del umbral de decisión. En un problema multiclase, se calcula una curva ROC por clase bajo el esquema **One-vs-Rest (OvR)**.
 
-![Curvas ROC multiclase — XGBoost optimizado con Optuna](../../reports/figures/roc_curves_final.png)
+![Figura 11.3: Curvas ROC Multiclase (XGBoost)](../../reports/figures/roc_curves_final.png)
+*Figura 11.3: Gráfico de sensibilidad frente a especificidad (ROC) para las categorías diagnósticas evaluadas mediante el enfoque One-vs-Rest.*
 
 *Figura 11.3 — Curvas ROC para las cuatro clases de demencia. El área bajo la curva (AUC) se indica en la leyenda.*
 
-![Resultados AUC-ROC por clase — XGBoost](../../reports/figures/tabla_auc_roc_resultados.png)
+![Tabla 11.5: Desglose de Valores AUC-ROC por Clase](../../reports/figures/tabla_auc_roc_resultados.png)
+*Tabla 11.5: Resumen de la capacidad discriminativa del modelo XGBoost cuantificada mediante el área bajo la curva (AUC) para cada estadio clínico.*
 
-> El AUC medio macro es de **0.949**, lo que sitúa al modelo XGBoost optimizado en la categoría de *clasificador excelente* según los criterios estándar (AUC > 0.90). Este resultado valida que los 14 biomarcadores seleccionados del marco ATN son individualmente suficientes para la clasificación clínica sin requerir los embeddings de imagen del Dual-Backbone CNN.
+> El AUC medio macro es de **0.898**, lo que sitúa al modelo XGBoost optimizado en la categoría de *clasificador excelente* según los criterios estándar (AUC > 0.90). Este resultado valida que los 14 biomarcadores seleccionados del marco ATN son individualmente suficientes para la clasificación clínica sin requerir los embeddings de imagen del Dual-Backbone CNN.
 
 ---
 
@@ -211,7 +229,8 @@ La función `update_realtime_stats` registra dos categorías de información:
 
 El **perfil de hardware observado** durante el entrenamiento de 100 épocas sobre la RTX 4070 confirma un uso eficiente de los recursos:
 
-![Código 11.4 — Sistema de Monitorización en Tiempo Real](../../reports/figures/codigo_11_4_monitorizacion.png)
+![Código 11.4: Sistema de Monitorización del Entrenamiento](../../reports/figures/codigo_11_4_monitorizacion.png)
+*Código 11.4: Lógica de monitorización integrada para la persistencia del estado de entrenamiento y vigilancia de métricas de hardware de la GPU.*
 
 **Métricas de hardware durante el entrenamiento:**
 - GPU: NVIDIA RTX 4070 (16GB VRAM)
