@@ -93,13 +93,21 @@ streamlit run src/app_diagnostics.py
 
 ---
 
-## 📂 Estructura del Repositorio para Tutores
+## 📂 Estructura Detallada del Repositorio
 
-- `/src`: Código fuente de la estación de trabajo de diagnóstico.
-- `/notebooks`: Cuadernos Jupyter con el proceso de EDA, Benchmarking y Optimización.
-- `/docs`: Documentación técnica completa y Memoria del Proyecto.
-- `/models`: El modelo final entrenado (`neuro_fusion_final_v1.joblib`).
-- `/reports/figures`: Galerilla completa de métricas, SHAP y matrices de confusión.
+Para facilitar la revisión por parte del tribunal y examinadores, se detalla a continuación el contenido y propósito de cada directorio:
+
+*   **[`/src`](./src)**: **Núcleo de la Aplicación.** Contiene el código fuente de la estación de trabajo de diagnóstico (`app_diagnostics.py`). Implementa la interfaz de usuario en Streamlit, la lógica de captura de biomarcadores y la orquestación del motor de inferencia.
+*   **[`/docs`](./docs)**: **Documentación Técnica y Memoria.** Carpeta fundamental que alberga los 15 capítulos de la memoria final del proyecto en formato Markdown, estructurados según las fases de investigación y desarrollo.
+*   **[`/models`](./models)**: **Modelos Entrenados (Binarios).** Almacena los archivos `.joblib` y `.pkl` de los modelos finales, incluyendo el ensamble *champion* y los modelos individuales optimizados para producción.
+*   **[`/reports/figures`](./reports/figures)**: **Galería de Activos Visuales.** Repositorio exhaustivo de todas las gráficas, curvas ROC, matrices de confusión y diagramas de arquitectura que ilustran la memoria técnica.
+*   **[`/data`](./data)**: **Inventario de Datos.** Archivos CSV consolidados y curados de las cohortes ADNI y OASIS-3 utilizados durante el entrenamiento y validación cruzada.
+*   **[`/scripts`](./scripts)**: **Utilidades de Soporte.** Scripts de Python para tareas automatizadas, generación de informes y transformaciones de datos específicas para el reporte final.
+*   **[`/results`](./results)**: **Salidas de Proceso.** Directorio con resultados intermedios, *checkpoints* de entrenamiento de redes neuronales y visualizaciones de validación extraídas.
+*   **[`/notebooks`](./notebooks)**: **Laboratorio de Experimentación.** Jupyter Notebooks originales que documentan el ciclo completo: desde el EDA inicial hasta el Benchmarking de algoritmos y la optimización con Optuna.
+*   **[`Audios/`](./Audios)**: **Registro de Comunicación.** Archivos multimedia con los hitos de requerimientos y toma de decisiones verbales capturados durante el desarrollo del sistema.
+*   **Archivos de Raíz**: Incluye orquestación de infraestructura (`Dockerfile`, `docker-compose.yml`), dependencias del sistema (`requirements.txt`) y licencia del proyecto.
+
 
 ---
 
