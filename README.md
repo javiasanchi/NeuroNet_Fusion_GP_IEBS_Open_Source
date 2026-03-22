@@ -8,7 +8,7 @@
 [![XGBoost](https://img.shields.io/badge/XGBoost-2.0-FF6600?style=for-the-badge&logo=xgboost&logoColor=white)](https://xgboost.readthedocs.io)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.32-FF4B4B?style=for-the-badge&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
-[![YouTube](https://img.shields.io/badge/YouTube-Video_Demo-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/3Hjrgr_haM8)
+[![YouTube](https://img.shields.io/badge/YouTube-Video_Presentation-red?style=for-the-badge&logo=youtube&logoColor=white)](https://youtu.be/tsmp3ydXNMo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge)](LICENSE)
 
 **IEBS Digital School — Postgrado en Inteligencia Artificial Aplicada 2026**  
@@ -16,8 +16,13 @@
 
 ---
 
-### [🚀 ACCEDER A LA APLICACIÓN EN VIVO](https://neuronet.iawordpress.com) | [📺 VER VÍDEO PRESENTACIÓN](https://youtu.be/3Hjrgr_haM8)
+### [🚀 ACCEDER A LA APLICACIÓN](https://neuronet.iawordpress.com) | [📺 VER VÍDEO PRESENTACIÓN](https://youtu.be/tsmp3ydXNMo)
+
+[![NeuroNet-Fusion Video Presentation](https://img.youtube.com/vi/tsmp3ydXNMo/maxresdefault.jpg)](https://youtu.be/tsmp3ydXNMo)
+*Haga clic en la imagen superior para ver la presentación técnica del proyecto.*
+
 *Despliegue estable con SSL, Nginx y Docker*
+
 
 ---
 
